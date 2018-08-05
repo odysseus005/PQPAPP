@@ -7,10 +7,10 @@
 
         <variable
             name="profile"
-            type="mychevroletconnect.com.chevroletapp.model.data.User" />
+            type="pasigqueueportal.com.pqpapp.model.data.User" />
         <variable
             name="view"
-            type="mychevroletconnect.com.chevroletapp.ui.profile.ProfileView" />
+            type="pasigqueueportal.com.pqpapp.ui.profile.ProfileView" />
 
     </data>
 
@@ -168,13 +168,14 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         />
 
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
-                        android:text="@{profile.gender}"
+                        android:text="@{profile.contact}"
                         android:layout_gravity="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         />
@@ -186,76 +187,13 @@
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="30dp"
                         android:layout_gravity="center"
-                        android:text="Gender"
+                        android:text="Contact Number"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:text="@{profile.occupation}"
-                        android:layout_gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_gravity="center"
-                        android:text="Occupation"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        />
+                    />
 
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:text="@{profile.citizenship}"
-                        android:layout_gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_gravity="center"
-                        android:text="Citizenship"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:text="@{profile.civil_status}"
-                        android:layout_gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_gravity="center"
-                        android:text="Civil Status"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        />
 
 
                 </LinearLayout>

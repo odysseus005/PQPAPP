@@ -3,36 +3,23 @@ package pasigqueueportal.com.pqpapp.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
-import mychevroletconnect.com.chevroletapp.model.data.User;
+import pasigqueueportal.com.pqpapp.model.data.Token;
+import pasigqueueportal.com.pqpapp.model.data.User;
 
 
-public class LoginResponse {
+public class LoginResponse extends BasicResponse {
 
-    @SerializedName("user")
-    private User user;
 
-    public User getUser() {
-        return user;
+    public Token getToken() {
+        return token;
     }
 
-
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setToken(Token token) {
+        this.token = token;
     }
 
-
-    private String result;
-
-    public String getResult() {
-        return result;
-    }
-
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
+    @SerializedName("token")
+    private Token token;
 
 
 }

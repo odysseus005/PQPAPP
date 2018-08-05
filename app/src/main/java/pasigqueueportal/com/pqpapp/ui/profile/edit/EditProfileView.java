@@ -1,24 +1,25 @@
-package pasigqueueportal.com.pqpapp.ui.register;
+package pasigqueueportal.com.pqpapp.ui.profile.edit;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
 
-public interface RegisterView extends MvpView {
-
-    void onSubmit();
+public interface EditProfileView extends MvpView{
 
 
     void showAlert(String message);
 
+    void onEdit();
 
     void startLoading();
 
     void stopLoading();
 
-    void onRegistrationSuccess();
 
+    void finishAct();
 
     void onBirthdayClicked();
+
+    void finish();
 
 
 }

@@ -6,6 +6,11 @@ import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 
 import io.realm.Realm;
 
+import pasigqueueportal.com.pqpapp.app.App;
+import pasigqueueportal.com.pqpapp.app.Endpoints;
+import pasigqueueportal.com.pqpapp.model.data.Token;
+import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -14,7 +19,7 @@ import retrofit2.Response;
 public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
     private int login_counter = 0;
     private static final String TAG = LoginPresenter.class.getSimpleName();
-    User user;
+    Token token;
 
     public void login(final String email, final String password) {
         if (email.isEmpty() || email.equals("")) {
@@ -31,16 +36,14 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                             getView().stopLoading();
                             if (response.isSuccessful()) {
                                 try {
-                                    switch (response.body().getResult()) {
-                                        case Constants.SUCCESS:
+                                    if (response.body().isSuccess()) {
                                             final Realm realm = Realm.getDefaultInstance();
                                             realm.executeTransactionAsync(new Realm.Transaction() {
                                                 @Override
                                                 public void execute(Realm realm) {
-
-                                                    user = response.body().getUser();
-                                                    Log.e(">>>>>", "sasa"+user.getFullName());
-                                                    realm.copyToRealmOrUpdate(user);
+                                                    realm.delete(Token.class);
+                                                    token = response.body().getToken();
+                                                    realm.copyToRealmOrUpdate(token);
 
 
                                                 }
@@ -48,7 +51,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                                 @Override
                                                 public void onSuccess() {
                                                     realm.close();
-                                                    getView().onLoginSuccess(user);
+                                                    getView().onLoginSuccess(token);
                                                 }
                                             }, new Realm.Transaction.OnError() {
                                                 @Override
@@ -58,20 +61,10 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                                     getView().showAlert("Error Saving API Response");
                                                 }
                                             });
-                                            break;
-                                        case Constants.NOT_EXIST:
-                                            getView().showAlert("Email does not exist");
-                                            break;
-                                        case Constants.WRONG_PASSWORD:
-                                            getView().showAlert("Wrong Password or Email");
-                                            break;
-                                        case "failed":
-                                            getView().showAlert("Can't Connect to the Server!");
 
-                                            break;
-                                        default:
-                                            getView().showAlert(String.valueOf(R.string.cantConnect));
-                                            break;
+
+                                    }else
+                                    {
 
                                     }
                                 } catch (NullPointerException e) {

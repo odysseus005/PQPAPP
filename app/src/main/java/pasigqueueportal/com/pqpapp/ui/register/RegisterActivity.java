@@ -25,9 +25,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import mychevroletconnect.com.chevroletapp.R;
-import mychevroletconnect.com.chevroletapp.databinding.ActivityRegisterBinding;
-import mychevroletconnect.com.chevroletapp.ui.login.LoginActivity;
+import pasigqueueportal.com.pqpapp.databinding.ActivityRegisterBinding;
+import pasigqueueportal.com.pqpapp.ui.login.LoginActivity;
 
 
 public class RegisterActivity extends MvpViewStateActivity<RegisterView, RegisterPresenter> implements RegisterView, TextWatcher {
@@ -46,7 +45,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
         binding.setView(getMvpView());
 
-        populateGenderAndCivil();
+
     }
 
     @Override
@@ -88,20 +87,6 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
      * End of MvpViewStateActivity
      ***/
 
-    @Override
-    public void onNext()
-    {
-        binding.regCargroup.setVisibility(View.VISIBLE);
-        binding.regUsergroup.setVisibility(View.GONE);
-
-        presenter.registerCar(binding.etCarModel.getText().toString(),
-                binding.etCarChassis.getText().toString(),
-                binding.etCarPlate.getText().toString(),
-                binding.etCarYearModel.getText().toString(),
-                binding.etCarDop.getText().toString(),
-              car_id,
-                binding.etCarName.getText().toString());
-    }
 
 
     @Override
@@ -116,15 +101,10 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
                 binding.etPassword.getText().toString(),
                 binding.etRepeatPassword.getText().toString(),
                 binding.etFirstName.getText().toString(),
-                binding.etMiddleName.getText().toString(),
                 binding.etLastName.getText().toString(),
                 binding.etBirthday.getText().toString(),
                 binding.etMobileNumber.getText().toString(),
-                binding.etAddress.getText().toString(),
-                binding.etCitizenship.getText().toString(),
-                binding.etOccupation.getText().toString(),
-                binding.spGender.getSelectedItem().toString(),
-                binding.spCivil.getSelectedItem().toString()
+                binding.etAddress.getText().toString()
                );
 
 
@@ -170,24 +150,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
                 .show();
     }
 
-    @Override
-    public void onUserRegistrationSuccess(String cid) {
 
-        binding.regCargroup.setVisibility(View.VISIBLE);
-        binding.regUsergroup.setVisibility(View.GONE);
-
-        if(!(cid==null)) {
-            binding.regCargroup.setVisibility(View.VISIBLE);
-            binding.regUsergroup.setVisibility(View.GONE);
-            car_id = cid;
-        }
-        else
-        {
-            showAlert("Error on Adding Car!");
-        }
-
-
-    }
 
 
 
@@ -209,22 +172,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
 
     }
 
-    @Override
-    public void onPurchasedClicked() {
-        Calendar newCalendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                binding.etCarDop.setText(dateFormatter.format(newDate.getTime()));
-            }
-
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
-
-    }
 
 
 
@@ -258,64 +206,6 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     }
 
 
-    private void populateGenderAndCivil() {
 
-
-
-        gender = new ArrayList<>();
-        gender.add("Male");
-        gender.add("Female");
-
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(RegisterActivity.this, R.layout.spinner_custom_item, gender);
-        binding.spGender.setAdapter(arrayAdapter);
-
-
-        /**
-         * Triggers on click of the spinner
-         */
-        binding.spGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-       civil = new ArrayList<>();
-       civil.add("Single");
-       civil.add("Married");
-       civil.add("Widowed");
-       civil.add("Seperated");
-
-
-
-        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<>(RegisterActivity.this, R.layout.spinner_custom_item,civil);
-        binding.spCivil.setAdapter(arrayAdapter2);
-
-
-        /**
-         * Triggers on click of the spinner
-         */
-        binding.spCivil.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-    }
 
 }

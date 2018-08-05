@@ -3,10 +3,11 @@ package pasigqueueportal.com.pqpapp.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import pasigqueueportal.com.pqpapp.app.Constants;
+import pasigqueueportal.com.pqpapp.model.data.User;
 
 
-
-public class ResultResponse {
+public class ResultResponse extends  BasicResponse {
 
     private String result;
 
@@ -22,29 +23,6 @@ public class ResultResponse {
 
 
 
-    @SerializedName("client_id")
-    private String client_id;
-
-    public String getClient_id() {
-        return client_id;
-    }
-
-    public void setClient_id(String client_id) {
-        this.client_id = client_id;
-    }
-
-    @SerializedName("data")
-    private String image;
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-
     @SerializedName("user")
     private User user;
 
@@ -56,6 +34,9 @@ public class ResultResponse {
     public void setUser(User user) {
         this.user = user;
     }
+
+
+
 
 
 }

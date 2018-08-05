@@ -22,13 +22,8 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
-import mychevroletconnect.com.chevroletapp.R;
-import mychevroletconnect.com.chevroletapp.databinding.ActivityLoginBinding;
-import mychevroletconnect.com.chevroletapp.databinding.DialogVerificationBinding;
-import mychevroletconnect.com.chevroletapp.model.data.User;
-import mychevroletconnect.com.chevroletapp.ui.forgot.ForgotPasswordActivity;
-import mychevroletconnect.com.chevroletapp.ui.main.MainActivity;
-import mychevroletconnect.com.chevroletapp.ui.register.RegisterActivity;
+import pasigqueueportal.com.pqpapp.databinding.ActivityLoginBinding;
+import pasigqueueportal.com.pqpapp.model.data.User;
 
 
 /**

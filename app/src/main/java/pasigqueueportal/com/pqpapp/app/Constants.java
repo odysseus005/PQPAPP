@@ -9,10 +9,12 @@ public class Constants {
     public static final String MESSAGE = "message";
     public static final String DATA = "data";
     public static final String TAG = "tag";
-    public static final String EMAIL = "client_email_address";
-    public static final String PASSWORD = "client_password";
-    public static final String OLD_PASSWORD = "client_old_password";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
     public static final String DATE = "date";
+    public static final String ACCEPT = "Accept";
+    public static final String APPJSON = "application/json";
+    public static final String BEARER = "Bearer ";
     public static final String REPORT_TYPE = "reportType";
 
     //Login and Register
@@ -23,16 +25,11 @@ public class Constants {
 
     //Profile
     public static final String USER_ID = "client_id";
-    public static final String FIRST_NAME = "client_first_name";
-    public static final String MIDDLENAME = "client_middle_name";
-    public static final String LAST_NAME = "client_last_name";
-    public static final String BIRTHDAY = "client_birthdate";
-    public static final String CONTACT = "client_contact_number";
-    public static final String ADDRESS = "client_address";
-    public static final String CITIZENSHIP = "client_citizenship";
-    public static final String GENDER = "client_gender";
-    public static final String OCCUPATION = "client_occupation";
-    public static final String CIVIL_STATUS = "client_civil_status";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String BIRTHDAY = "birthday";
+    public static final String CONTACT = "contact_no";
+    public static final String ADDRESS = "address";
 
 
     //Garage

@@ -3,7 +3,8 @@ package pasigqueueportal.com.pqpapp.ui.login;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-import mychevroletconnect.com.chevroletapp.model.data.User;
+import pasigqueueportal.com.pqpapp.model.data.Token;
+import pasigqueueportal.com.pqpapp.model.data.User;
 
 
 public interface LoginView extends MvpView {
@@ -21,7 +22,7 @@ public interface LoginView extends MvpView {
 
     void stopLoading();
 
-    void onLoginSuccess(User user);
+    void onLoginSuccess(Token token);
 
     void onForgotPasswordButtonClicked();
 
