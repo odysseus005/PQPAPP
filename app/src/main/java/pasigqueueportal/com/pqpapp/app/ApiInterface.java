@@ -9,6 +9,7 @@ import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -38,9 +39,15 @@ public interface ApiInterface {
     );
 
 
+    @GET(Endpoints.GET_USER)
+    Call<ResultResponse>getUser( @Header(Constants.ACCEPT) String json,
+                                 @Header(Constants.AUTHORIZATION) String authorization
+
+    );
+
     @FormUrlEncoded
     @POST(Endpoints.CLIENT)
-    Call<LoginResponse> updateUserCode(@Field(Constants.TAG) String tag,
+    Call<ResultResponse> updateUserCode(@Field(Constants.TAG) String tag,
                                        @Field(Constants.USER_ID) String user_id);
 
 

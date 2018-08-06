@@ -18,14 +18,12 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
-import mychevroletconnect.com.chevroletapp.R;
-import mychevroletconnect.com.chevroletapp.app.Endpoints;
-import mychevroletconnect.com.chevroletapp.databinding.ActivityProfileBinding;
-import mychevroletconnect.com.chevroletapp.databinding.DialogChangePasswordBinding;
-import mychevroletconnect.com.chevroletapp.model.data.User;
-import mychevroletconnect.com.chevroletapp.ui.profile.edit.EditProfileActivity;
-import mychevroletconnect.com.chevroletapp.util.CircleTransform;
-
+import pasigqueueportal.com.pqpapp.app.Endpoints;
+import pasigqueueportal.com.pqpapp.databinding.ActivityProfileBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogChangePasswordBinding;
+import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.profile.edit.EditProfileActivity;
+import pasigqueueportal.com.pqpapp.util.CircleTransform;
 
 public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePresenter>
         implements ProfileView {

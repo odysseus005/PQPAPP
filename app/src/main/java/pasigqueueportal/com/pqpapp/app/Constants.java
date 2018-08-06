@@ -12,6 +12,7 @@ public class Constants {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String DATE = "date";
+    public static final String AUTHORIZATION = "Authorization";
     public static final String ACCEPT = "Accept";
     public static final String APPJSON = "application/json";
     public static final String BEARER = "Bearer ";

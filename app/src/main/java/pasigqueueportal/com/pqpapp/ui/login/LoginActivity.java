@@ -22,15 +22,19 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
+import pasigqueueportal.com.pqpapp.MainActivity;
 import pasigqueueportal.com.pqpapp.databinding.ActivityLoginBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogVerificationBinding;
+import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.register.RegisterActivity;
 
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresenter>
-        implements LoginView, TextWatcher,NavigationView.OnNavigationItemSelectedListener {
+        implements LoginView, TextWatcher {
 
 
     // UI references.
@@ -50,26 +54,18 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        binding.appBarLogin.setView(getMvpView());
-        setSupportActionBar(binding.appBarLogin.toolbar);
+        binding.setView(getMvpView());
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("Chevrolet App");
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout,
-                binding.appBarLogin.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        binding.drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
 
-        binding.navView.setNavigationItemSelectedListener(this);
+
 
         dialog = new Dialog(LoginActivity.this);
         user = realm.where(User.class).findFirst();
         if (user != null)
-            onLoginSuccess(user);
-        Menu nav_Menu =  binding.navView.getMenu();
-        nav_Menu.findItem(R.id.nav_appointment).setVisible(false);
-        nav_Menu.findItem(R.id.nav_profile).setVisible(false);
-        nav_Menu.findItem(R.id.nav_garage).setVisible(false);
-        nav_Menu.findItem(R.id.nav_logout).setVisible(false);
+            onLoginConfirm(user);
+
 
 
     }
@@ -133,8 +129,8 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
         finish();*/
 
         presenter.login(
-                binding.appBarLogin.username.getText().toString(),
-                binding.appBarLogin.password.getText().toString()
+                binding.username.getText().toString(),
+                binding.password.getText().toString()
         );
     }
 
@@ -152,8 +148,8 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
     @Override
     public void setEditTextValue(String username, String password) {
-        binding.appBarLogin.username.setText(username);
-        binding.appBarLogin.password.setText(password);
+        binding.username.setText(username);
+        binding.password.setText(password);
     }
 
     @Override
@@ -173,7 +169,14 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
 
     @Override
-    public void onLoginSuccess(final User user) {
+    public void onLoginSuccess(final Token token) {
+
+
+
+    }
+
+    @Override
+    public void onLoginConfirm(final User user) {
 
 
         if(!(user.getFirstlogin().equalsIgnoreCase("APPROVED")))
@@ -241,57 +244,13 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_profile) {
-            // startActivity(new Intent(this, GarageListActivity.class));
-        } else if (id == R.id.nav_login) {
-            startActivity(new Intent(this, LoginActivity.class));
-        }else if (id == R.id.nav_dealer) {
-
-        } else if (id == R.id.nav_promo) {
-
-        } else if (id == R.id.nav_showroom) {
-
-        } else if (id == R.id.nav_parts) {
-
-        } else if (id == R.id.nav_testdrive) {
-
-        } else if (id == R.id.nav_roadside) {
-
-        }else if (id == R.id.nav_pms) {
-
-        }else if (id == R.id.nav_warranty) {
-
-        }else if (id == R.id.nav_care) {
-
-        }
-        else if (id == R.id.nav_logout) {
-
-        }
-        binding.drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
 
 
     @Override
     public void onForgotPasswordButtonClicked() {
 
-        startActivity(new Intent(this, ForgotPasswordActivity.class));
+       // startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
     @Override

@@ -15,6 +15,7 @@ public class Endpoints {
     public static final String CLIENT = "new_client.php?";
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
+    public static final String GET_USER = "/user";
     public static final String UPDATEUSER = "editProfile";
     public static final String UPDATEPASS = "editPassword";
     public static final String FORGOTPASS = "forgotPass";
