@@ -40,11 +40,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import io.realm.Realm;
-import mychevroletconnect.com.chevroletapp.R;
-import mychevroletconnect.com.chevroletapp.app.Endpoints;
-import mychevroletconnect.com.chevroletapp.databinding.ActivityEditProfileBinding;
-import mychevroletconnect.com.chevroletapp.model.data.User;
-import mychevroletconnect.com.chevroletapp.util.CircleTransform;
+
+import pasigqueueportal.com.pqpapp.databinding.ActivityEditProfileBinding;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfilePresenter> implements EditProfileView {

@@ -7,10 +7,6 @@ import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import java.io.File;
 
 import io.realm.Realm;
-import mychevroletconnect.com.chevroletapp.app.App;
-import mychevroletconnect.com.chevroletapp.app.Endpoints;
-import mychevroletconnect.com.chevroletapp.model.data.User;
-import mychevroletconnect.com.chevroletapp.model.response.ResultResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

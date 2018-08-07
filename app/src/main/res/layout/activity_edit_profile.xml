@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
+  >
     <data>
-
         <variable
             name="activity"
             type="pasigqueueportal.com.pqpapp.ui.profile.edit.EditProfileActivity" />
-
         <variable
             name="user"
             type="pasigqueueportal.com.pqpapp.model.data.User" />
-
         <variable
             name="view"
             type="pasigqueueportal.com.pqpapp.ui.profile.edit.EditProfileView" />
@@ -118,9 +114,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/edittext_selector"
+
                     android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:text='@{user.name}'
+                    android:text='@{user.fullName}'
                     android:inputType="textPersonName|textCapWords"
                     android:maxLength="100"
                     android:padding="12dp"
@@ -140,7 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/edittext_selector"
+
                     android:text='@{user.address}'
                     android:inputType="textPostalAddress"
                     android:maxLength="255"
@@ -193,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/edittext_selector"
+
                     android:text='@{user.contact}'
                     android:inputType="number"
                     android:maxLength="11"
