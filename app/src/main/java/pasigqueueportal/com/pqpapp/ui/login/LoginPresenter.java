@@ -6,6 +6,7 @@ import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 
 import io.realm.Realm;
 
+import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.app.App;
 import pasigqueueportal.com.pqpapp.app.Constants;
 import pasigqueueportal.com.pqpapp.app.Endpoints;
@@ -125,7 +126,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                             }
                         });
                     } else {
-                        getView().showAlert(String.valueOf(R.string.cantConnect));
+                        getView().showAlert("Error Connecting to Server");
                     }
                 } else {
                     getView().showAlert(response.message() != null ? response.message()
@@ -182,7 +183,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                             }
                         });
                     } else {
-                        getView().showAlert(String.valueOf(R.string.cantConnect));
+                        getView().showAlert("Error Connecting to Server");
                     }
                 } else {
                     getView().showAlert(response.message() != null ? response.message()

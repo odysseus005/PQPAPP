@@ -10,6 +10,11 @@ import io.realm.Realm;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import pasigqueueportal.com.pqpapp.app.App;
+import pasigqueueportal.com.pqpapp.app.Constants;
+import pasigqueueportal.com.pqpapp.app.Endpoints;
+import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,12 +32,12 @@ public class EditProfilePresenter extends MvpNullObjectBasePresenter<EditProfile
     }
 
 
-    public void updateUser(String userId, String firstName, String lastName, String contact, String birthday, String address, String position) {
+    public void updateUser(String token, String firstName, String lastName, String contact, String birthday, String address, String position) {
         if (firstName.equals("") || lastName.equals("") || birthday.equals("") || contact.equals("") || address.equals("")) {
             getView().showAlert("Fill-up all fields");
         } else {
             getView().startLoading();
-            App.getInstance().getApiInterface().updateUser(Endpoints.UPDATEUSER,userId, firstName, lastName, contact, birthday, address)
+            App.getInstance().getApiInterface().updateUser(Constants.APPJSON,Constants.BEARER+token, firstName, lastName,  birthday, address)
                     .enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, final Response<User> response) {

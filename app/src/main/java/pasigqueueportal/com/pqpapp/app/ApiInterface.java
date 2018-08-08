@@ -4,6 +4,7 @@ package pasigqueueportal.com.pqpapp.app;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import retrofit2.Call;
@@ -60,11 +61,12 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(Endpoints.CLIENT)
-    Call<LoginResponse> updateUser(@Field(Constants.TAG) String tag,
-                                   @Field(Constants.USER_ID) String user_id,
-                                   @Field(Constants.BIRTHDAY) String birthday,
-                                   @Field(Constants.CONTACT) String contact,
-                                   @Field(Constants.ADDRESS) String address
+    Call<User> updateUser(@Header(Constants.ACCEPT) String json,
+                          @Header(Constants.AUTHORIZATION) String authorization,
+                          @Field(Constants.FIRST_NAME) String firstName,
+                          @Field(Constants.LAST_NAME) String lastName,
+                          @Field(Constants.BIRTHDAY) String birthday,
+                          @Field(Constants.ADDRESS) String address
                                  );
 
     @Multipart

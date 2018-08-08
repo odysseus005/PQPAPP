@@ -23,6 +23,7 @@ import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
 import pasigqueueportal.com.pqpapp.MainActivity;
+import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityLoginBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogVerificationBinding;
 import pasigqueueportal.com.pqpapp.model.data.Token;
@@ -171,7 +172,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     @Override
     public void onLoginSuccess(final Token token) {
 
-
+        presenter.getUser(token.getToken());
 
     }
 

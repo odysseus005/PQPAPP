@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityRegisterBinding;
 import pasigqueueportal.com.pqpapp.ui.login.LoginActivity;
 
@@ -33,9 +34,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     private ActivityRegisterBinding binding;
     private ProgressDialog progressDialog;
     private String etAddress;
-    private String car_id;
-    private ArrayList<String> gender;
-    private ArrayList<String> civil;
+
 
 
     @Override

@@ -41,7 +41,11 @@ import java.util.Locale;
 
 import io.realm.Realm;
 
+import pasigqueueportal.com.pqpapp.R;
+import pasigqueueportal.com.pqpapp.app.Endpoints;
 import pasigqueueportal.com.pqpapp.databinding.ActivityEditProfileBinding;
+import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.util.CircleTransform;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfilePresenter> implements EditProfileView {
@@ -80,7 +84,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
 
         presenter.onStart();
         loadImage();
-        populateGenderAndCivil();
+
 
     }
 
@@ -112,7 +116,6 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
 //        presenter.updateUser(user.getUserId() + "",
 //                binding.firstName.getText().toString(),
 //                binding.lastName.getText().toString(),
-//                binding.contact.getText().toString(),
 //                binding.birthday.getText().toString(),
 //                binding.address.getText().toString(), user.getPosition());
     }
@@ -338,45 +341,6 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
     }
 
 
-    private void populateGenderAndCivil() {
-
-
-
-        gender = new ArrayList<>();
-        gender.add("Male");
-        gender.add("Female");
-
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_custom_item, gender);
-        binding.spGender.setAdapter(arrayAdapter);
-
-        if(!(user.getGender().equalsIgnoreCase("Male")))
-        binding.spGender.setSelection(1);
-
-
-
-        civil = new ArrayList<>();
-        civil.add("Single");
-        civil.add("Married");
-        civil.add("Widowed");
-        civil.add("Seperated");
-
-
-
-        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<>(this, R.layout.spinner_custom_item,civil);
-        binding.spCivil.setAdapter(arrayAdapter2);
-
-        if(user.getCivil_status().equalsIgnoreCase("Single"))
-            binding.spCivil.setSelection(0);
-        else if((user.getCivil_status().equalsIgnoreCase("Married")))
-            binding.spCivil.setSelection(1);
-        else if((user.getCivil_status().equalsIgnoreCase("Widowed")))
-            binding.spCivil.setSelection(2);
-        else
-            binding.spCivil.setSelection(3);
-
-
-    }
 
 
 }

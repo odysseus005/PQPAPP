@@ -18,6 +18,7 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
+import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.app.Endpoints;
 import pasigqueueportal.com.pqpapp.databinding.ActivityProfileBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogChangePasswordBinding;
