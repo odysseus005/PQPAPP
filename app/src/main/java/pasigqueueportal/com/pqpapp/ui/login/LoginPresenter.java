@@ -147,9 +147,9 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
 
 
 
-    public void firstLogin(String userId) {
+    public void firstLogin(String token, final User userSave) {
         getView().startLoading();
-        App.getInstance().getApiInterface().updateUserCode(Endpoints.FIRSTLOGIN,userId).enqueue(new Callback<ResultResponse>() {
+        App.getInstance().getApiInterface().updateUserCode(Constants.APPJSON,Constants.BEARER+token).enqueue(new Callback<ResultResponse>() {
             @Override
             public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
                 getView().stopLoading();
@@ -160,7 +160,8 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                         realm.executeTransactionAsync(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                user = response.body().getUser();
+                                user = userSave;
+                                user.setFirstlogin("1");
                                 realm.copyToRealmOrUpdate(user);
 
 

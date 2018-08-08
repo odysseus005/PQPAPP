@@ -12,12 +12,12 @@ public class Endpoints {
 
 
     //User
-    public static final String CLIENT = "new_client.php?";
+    public static final String VERIFY_CODE = "verify";
     public static final String LOGIN = "login";
     public static final String REGISTER = "register";
     public static final String GET_USER = "user";
-    public static final String UPDATEUSER = "editProfile";
-    public static final String UPDATEPASS = "editPassword";
+    public static final String UPDATEUSER = "profile";
+    public static final String UPDATEPASS = "changepass";
     public static final String FORGOTPASS = "forgotPass";
     public static final String FIRSTLOGIN = "firstLogin";
 

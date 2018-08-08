@@ -49,7 +49,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:hint="A code has been sent to your email account. "
+                        android:hint="A code has been sent to your contact number. "
                         android:textColor="@color/gray"
 
                         />

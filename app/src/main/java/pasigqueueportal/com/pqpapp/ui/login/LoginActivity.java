@@ -43,6 +43,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     private ProgressDialog progressDialog;
     private Realm realm;
     User user;
+    Token token;
     Dialog dialog;
 
 
@@ -64,6 +65,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
         dialog = new Dialog(LoginActivity.this);
         user = realm.where(User.class).findFirst();
+        token = realm.where(Token.class).findFirst();
         if (user != null)
             onLoginConfirm(user);
 
@@ -180,7 +182,9 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     public void onLoginConfirm(final User user) {
 
 
-        if(!(user.getFirstlogin().equalsIgnoreCase("APPROVED")))
+        token = realm.where(Token.class).findFirst();
+
+        if(!(user.getFirstlogin().equalsIgnoreCase("1")))
         {
 
             dialog = new Dialog(LoginActivity.this);
@@ -194,7 +198,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
                 @Override
                 public void onClick(View v) {
                     if(dialogBinding.etCode.getText().toString().equalsIgnoreCase(user.getCode()))
-                        presenter.firstLogin(String.valueOf(user.getUserId()));
+                        presenter.firstLogin(token.getToken(),user);
                     else
                         showAlert("Invalid Code");
 
