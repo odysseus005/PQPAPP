@@ -33,7 +33,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:windowSoftInputMode="adjustPan" />
 
 

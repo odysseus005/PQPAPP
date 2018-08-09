@@ -22,12 +22,12 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
-import pasigqueueportal.com.pqpapp.MainActivity;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityLoginBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogVerificationBinding;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.main.MainActivity;
 import pasigqueueportal.com.pqpapp.ui.register.RegisterActivity;
 
 

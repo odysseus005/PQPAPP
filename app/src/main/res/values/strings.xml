@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">PQPAPP</string>
+
+    <!--changepass -->
+    <string name="change_password_dialog">Enter your username below and we\'ll send your password!</string>
+    <string name="password_recovery">Password Recovery</string>
+
+    <!-- nav drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
