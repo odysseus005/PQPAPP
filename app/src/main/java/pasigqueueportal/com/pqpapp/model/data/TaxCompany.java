@@ -12,31 +12,31 @@ public class TaxCompany extends RealmObject {
     @PrimaryKey
     @SerializedName("company_id")
     @Expose
-    private int dealerId;
+    private int companyId;
     @SerializedName("company_name")
     @Expose
-    private String dealerName;
+    private String companyName;
     @SerializedName("company_address")
     @Expose
-    private String dealerAddress;
-    @SerializedName("dealer_lat")
+    private String companyAddress;
+    @SerializedName("company_lat")
     @Expose
-    private String dealerLat;
-    @SerializedName("dealer_long")
+    private String companyLat;
+    @SerializedName("company_long")
     @Expose
-    private String dealerLong;
-    @SerializedName("dealer_contact_number")
+    private String companyLong;
+    @SerializedName("company_contact_number")
     @Expose
-    private String dealerContact;
-    @SerializedName("dealer_opening")
+    private String companyContact;
+    @SerializedName("company_opening")
     @Expose
-    private String dealerOpening;
-    @SerializedName("dealer_closing")
+    private String companyOpening;
+    @SerializedName("company_closing")
     @Expose
-    private String dealerClosing;
+    private String companyClosing;
     @SerializedName("profile_pic")
     @Expose
-    private String dealerImage;
+    private String companyImage;
 
     private double distance;
 
@@ -51,75 +51,75 @@ public class TaxCompany extends RealmObject {
 
 
     public int getDealerId() {
-        return dealerId;
+        return companyId;
     }
 
-    public void setDealerId(int dealerId) {
-        this.dealerId = dealerId;
+    public void setDealerId(int companyId) {
+        this.companyId = companyId;
     }
 
     public String getDealerName() {
-        return dealerName;
+        return companyName;
     }
 
-    public void setDealerName(String dealerName) {
-        this.dealerName = dealerName;
+    public void setDealerName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getDealerAddress() {
-        return dealerAddress;
+        return companyAddress;
     }
 
-    public void setDealerAddress(String dealerAddress) {
-        this.dealerAddress = dealerAddress;
+    public void setDealerAddress(String companyAddress) {
+        this.companyAddress = companyAddress;
     }
 
     public String getDealerLat() {
-        return dealerLat;
+        return companyLat;
     }
 
-    public void setDealerLat(String dealerLat) {
-        this.dealerLat = dealerLat;
+    public void setDealerLat(String companyLat) {
+        this.companyLat = companyLat;
     }
 
     public String getDealerLong() {
-        return dealerLong;
+        return companyLong;
     }
 
-    public void setDealerLong(String dealerLong) {
-        this.dealerLong = dealerLong;
+    public void setDealerLong(String companyLong) {
+        this.companyLong = companyLong;
     }
 
     public String getDealerContact() {
-        return dealerContact;
+        return companyContact;
     }
 
-    public void setDealerContact(String dealerContact) {
-        this.dealerContact = dealerContact;
+    public void setDealerContact(String companyContact) {
+        this.companyContact = companyContact;
     }
 
     public String getDealerOpening() {
-        return dealerOpening;
+        return companyOpening;
     }
 
-    public void setDealerOpening(String dealerOpening) {
-        this.dealerOpening = dealerOpening;
+    public void setDealerOpening(String companyOpening) {
+        this.companyOpening = companyOpening;
     }
 
     public String getDealerClosing() {
-        return dealerClosing;
+        return companyClosing;
     }
 
-    public void setDealerClosing(String dealerClosing) {
-        this.dealerClosing = dealerClosing;
+    public void setDealerClosing(String companyClosing) {
+        this.companyClosing = companyClosing;
     }
 
     public String getDealerImage() {
-        return dealerImage;
+        return companyImage;
     }
 
-    public void setDealerImage(String dealerImage) {
-        this.dealerImage = dealerImage;
+    public void setDealerImage(String companyImage) {
+        this.companyImage = companyImage;
     }
 
 }

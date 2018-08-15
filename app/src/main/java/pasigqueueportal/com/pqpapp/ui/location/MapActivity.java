@@ -57,7 +57,14 @@ import java.util.Locale;
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
+import pasigqueueportal.com.pqpapp.R;
+import pasigqueueportal.com.pqpapp.databinding.ActivityMapBinding;
+import pasigqueueportal.com.pqpapp.model.data.TaxCompany;
+import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.util.BitmapUtils;
+import pasigqueueportal.com.pqpapp.util.FunctionUtils;
+import pasigqueueportal.com.pqpapp.util.FusedLocation;
+import pasigqueueportal.com.pqpapp.util.SimpleLocation;
 
 
 public class MapActivity extends MvpActivity<MapView, MapPresenter> implements MapView, OnMapReadyCallback, GoogleMap.OnMarkerClickListener,DirectionCallback {
@@ -69,19 +76,13 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     private View markerRestIcon, markerUserIcon;
     private String TAG = MapActivity.class.getSimpleName();
     private PlaceAutocompleteFragment autocompleteFragment;
-    private RealmResults<NearDealer> nearestCompanies;
     private Marker myMarker = null;
     private ActivityMapBinding binding;
-    private MapListAdapter adapter;
     private FusedLocation fusedLocation;
     private SimpleLocation location;
-    private String searchText;
-    private NearDealer nearDealer;
+    private TaxCompany nearDealer;
     LocationManager locationManager;
     private User user;
-    DialogDealerDetailBinding detailBinding;
-    Dialog dialog;
-    BottomSheetDialog dialogDetail;
     static final Integer CALL = 0x2;
 
     @Override
@@ -122,7 +123,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
             }
         });
 
-        binding.fab2.setVisibility(View.GONE);
+
 
     }
 
@@ -187,7 +188,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
                 .icon(BitmapDescriptorFactory.fromBitmap(BitmapUtils.createDrawableFromView(MapActivity.this, markerUserIcon))));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
-        binding.fab2.setVisibility(View.VISIBLE);
+
 
         presenter.getNearest(myMarker.getPosition().latitude, myMarker.getPosition().longitude);
     }
@@ -210,73 +211,8 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     }
 
 
-    @Override
-    public void showNearest() {
-        final Realm realm = Realm.getDefaultInstance();
 
 
-        dialog = new Dialog(this);
-
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-
-        DialogShowNearestBinding dialogBinding = DataBindingUtil.inflate(
-                getLayoutInflater(),
-                R.layout.dialog_show_nearest,
-                null,
-                false);
-
-
-        dialogBinding.setView(getMvpView());
-
-
-        //adapter
-        dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MapListAdapter(this);
-        dialogBinding.recyclerView.setAdapter(adapter);
-
-
-         nearestCompanies = realm.where(NearDealer.class).findAll().sort("distance", Sort.ASCENDING);
-         setNearestCompany(nearestCompanies);
-
-
-
-        dialogBinding.searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                searchText = query;
-                searchDealer();
-
-                return true;
-
-            }
-        });
-
-        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                binding.fab2.setVisibility(View.VISIBLE);
-            }
-        });
-
-        dialog.setContentView(dialogBinding.getRoot());
-        dialog.setCancelable(false);
-        dialog.show();
-    }
-
-
-    @Override
-    public void setNearestCompany(List<NearDealer> companyList) {
-        adapter.setList(companyList);
-    }
 
     @Override
     public void startLoading() {
@@ -301,11 +237,11 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     public void updateMap() {
         final Realm realm = Realm.getDefaultInstance();
         mMap.clear();
-        List<Dealer> companies = realm.where(Dealer.class).findAll();
+        List<TaxCompany> companies = realm.where(TaxCompany.class).findAll();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         MarkerOptions markerOptions = new MarkerOptions();
         if (!companies.isEmpty()) {
-            for (Dealer company : companies) {
+            for (TaxCompany company : companies) {
                 markerOptions.position(new LatLng(Double.parseDouble(company.getDealerLat()), Double.parseDouble(company.getDealerLong())));
                 markerOptions.title(company.getDealerName());
                 markerOptions.snippet(company.getDealerId() + "");
@@ -320,7 +256,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
 
         }else
         {
-            showAlert("Can't Load Dealers");
+            showAlert("Can't Load Company");
         }
 
         realm.close();
@@ -339,7 +275,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
              int nearID = Integer.parseInt(marker.getSnippet());
 
 
-             nearDealer= realm.where(NearDealer.class).equalTo("dealerId", nearID).findFirst();
+             nearDealer= realm.where(TaxCompany.class).equalTo("dealerId", nearID).findFirst();
 
 
              if (nearDealer.isLoaded() || nearDealer.isValid())
@@ -491,50 +427,10 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
         }
     }
 
-    @Override
-    public void OnItemClicked(final NearDealer company) {
-
-
-        dialog.dismiss();
-        mMap.clear();
-
-        nearDealer = company;
-
-     try {
-
-
-         if (company.isLoaded() || company.isValid())
-             showDealerDetail(company);
-
-
-         LatLng latLng = new LatLng(Double.parseDouble(company.getDealerLat()), Double.parseDouble(company.getDealerLong()));
-         updateMap();
-         setMyMarker(myMarker.getPosition());
-
-
-         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
-
-         GoogleDirection.withServerKey("AIzaSyCi6ViLY_YfMCyFFg5FyfjuVLACPNRNYY0")
-                 .from(myMarker.getPosition())
-                 .to(latLng)
-                 .transportMode(TransportMode.DRIVING)
-                 .execute(this);
 
 
 
-
-
-     }catch (Exception e)
-     {
-                    Log.e(">>>>>>",e+"");
-     }
-
-
-    }
-
-
-    public void showDealerDetail(final NearDealer dealer)
+    public void showDealerDetail(final TaxCompany dealer)
     {
 
 
@@ -549,7 +445,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
         binding.dealerName.setText(dealer.getDealerName());
         binding.dealerAddress.setText(dealer.getDealerAddress());
         binding.dealerContact.setText("Contact Number: "+dealer.getDealerContact());
-        binding.dealerOpening.setText("Opening: "+FunctionUtils.hour24to12hour(dealer.getDealerOpening()));
+        binding.dealerOpening.setText("Opening: "+ FunctionUtils.hour24to12hour(dealer.getDealerOpening()));
         binding.dealerClosing.setText("Closing: "+FunctionUtils.hour24to12hour(dealer.getDealerClosing()));
         binding.dealerDistance.setText("Total Distance: "+dealer.getDistance()+" KM");
         binding.dealerEta.setVisibility(View.GONE);
@@ -642,7 +538,6 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
                 return true;
             case R.id.action_refresh:
                 mMap.clear();
-                binding.fab2.setVisibility(View.GONE);
                 presenter.loadDealerList(user.getUserId());
                 return true;
 
@@ -673,31 +568,5 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     }
 
 
-
-    private void searchDealer() {
-        adapter = new MapListAdapter(this);
-        if (nearestCompanies.isLoaded() && nearestCompanies.isValid()) {
-            if (searchText.isEmpty()) {
-
-
-                nearestCompanies = realm.where(NearDealer.class).findAll();
-                adapter.setList(realm.copyToRealmOrUpdate(nearestCompanies.where()
-                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
-                adapter.notifyDataSetChanged();
-
-            } else {
-
-                nearestCompanies = realm.where(NearDealer.class).findAll();
-               adapter.setList(realm.copyToRealmOrUpdate(nearestCompanies.where()
-                        .contains("dealerName",searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("dealerAddress",searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("dealerLocation",searchText, Case.INSENSITIVE)
-                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
-                adapter.notifyDataSetChanged();
-            }
-        }
-    }
 
 }

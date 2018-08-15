@@ -8,11 +8,8 @@ import pasigqueueportal.com.pqpapp.model.data.TaxCompany;
 
 
 public interface MapView extends MvpView {
-    void showNearest();
 
-    void setNearestCompany(List<TaxCompany> companyList);
 
-    void OnItemClicked(TaxCompany companyList);
 
     void startLoading();
 
