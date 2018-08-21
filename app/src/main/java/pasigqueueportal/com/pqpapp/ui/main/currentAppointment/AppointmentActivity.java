@@ -34,6 +34,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,7 +43,11 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityAppointmentCurrentBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogAddAppointmentBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
+import pasigqueueportal.com.pqpapp.model.data.Barangay;
+import pasigqueueportal.com.pqpapp.model.data.TaxType;
+import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
 
 
@@ -57,10 +62,16 @@ public class AppointmentActivity
     private Realm realm;
     private User user;
     private RealmResults<Appointment> appointmentlmResults;
+    private RealmResults<Barangay> barangayRealmResults;
+    private RealmResults<TaxType> taxTypeRealmResults;
     private String searchText;
     public String id,appointid;
     private AppointmentAdapter appointmentListAdapter;
+    private AssesTypeAdapter assesTypeAdapter;
+    private DialogAddAppointmentBinding dialogBinding;
     private Dialog dialog;
+    private Token token;
+    private  String selectedBaranagay="",selectedTaxtype="",selectedDate="";
     public AppointmentActivity(){
 
     }
@@ -111,7 +122,7 @@ public class AppointmentActivity
 
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-
+        token = realm.where(Token.class).findFirst();
         if (user == null) {
             Log.d(TAG, "No User found");
             //  finish();
@@ -121,7 +132,8 @@ public class AppointmentActivity
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Appointment");
 
 
-        appointmentListAdapter = new AppointmentAdapter(getActivity(), getMvpView());
+        appointmentListAdapter = new AppointmentAdapter(getActivity(), getMvpView(),realm);
+        assesTypeAdapter = new AssesTypeAdapter(getActivity(),getMvpView());
         binding.recyclerView.setAdapter(appointmentListAdapter);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -142,10 +154,24 @@ public class AppointmentActivity
             public void onClick(View v) {
 
 
+                dialogSetAppointment();
+
 
             }
         });
 
+        dialog = new Dialog(getContext());
+
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        dialogBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_add_appointment,
+                null,
+                false);
+
+        presenter.loadBarangay(token.getToken());
+        presenter.loadTaxType(token.getToken());
 
     }
 
@@ -193,14 +219,13 @@ public class AppointmentActivity
     public void onResume() {
         super.onResume();
 
-        presenter.loadAppointmentList(String.valueOf(user.getUserId()));
+        presenter.loadAppointmentList(token.getToken());
     }
 
 
     @Override
     public void onDestroy() {
         presenter.onStop();
-        appointmentlmResults.removeChangeListeners();
         realm.close();
         super.onDestroy();
     }
@@ -208,22 +233,91 @@ public class AppointmentActivity
 
     @Override
     public void onRefresh() {
-            presenter.loadAppointmentList(String.valueOf(user.getUserId()));
+            presenter.loadAppointmentList(token.getToken());
     }
 
 
-//    public void loadData()
-//    {
-//        realm = Realm.getDefaultInstance();
-//        User user = realm.where(User.class).findFirst();
-//        appointmentlmResults = realm.where(Appointment.class).findAll();
-//            if (appointmentlmResults.isLoaded() && appointmentlmResults.isValid()) {
-//                getMvpView().setAppointmentList();
-//            }else
-//            {
-//                presenter.loadAppointmentList(String.valueOf(user.getUserId()));
-//            }
-//    }
+
+
+
+
+
+    @Override
+    public  void loadBarangay()
+    {
+
+
+        List<String> barangay = new ArrayList<>();
+        barangayRealmResults = realm.where(Barangay.class).findAll();
+
+        if(!barangayRealmResults.isEmpty()) {
+            for (Barangay value : barangayRealmResults) {
+                barangay.add(value.getBarangayName());
+            }
+
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_custom_item, barangay);
+            dialogBinding.spBarangay.setAdapter(arrayAdapter);
+
+            dialogBinding.spBarangay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    selectedBaranagay=String.valueOf(barangayRealmResults.get(position).getBarangayId());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+        else
+            showError("No Available Barangay");
+
+    }
+
+
+    @Override
+    public void loadTaxType()
+    {
+
+        List<String> tax = new ArrayList<>();
+        taxTypeRealmResults = realm.where(TaxType.class).findAll();
+
+
+        if(!taxTypeRealmResults.isEmpty()) {
+            for (TaxType value : taxTypeRealmResults) {
+                tax.add(value.getTaxTypeDesc());
+                Log.d(">>>>>",value.getTaxTypeDesc());
+            }
+
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_custom_item, tax);
+            dialogBinding.spTaxType.setAdapter(arrayAdapter);
+
+            dialogBinding.spTaxType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    selectedTaxtype=String.valueOf(taxTypeRealmResults.get(position).getTaxTypeId());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+        else
+            showError("No Available Tax Type");
+
+    }
+
+
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -234,11 +328,11 @@ public class AppointmentActivity
     @Override
     public void setAppointmentList(){
 
+        Date c = Calendar.getInstance().getTime();
         appointmentlmResults = realm.where(Appointment.class).findAll();
-       appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+        appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+               .greaterThan("appointmentTimestamp",c )
                .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
-
-
 
         appointmentListAdapter.notifyDataSetChanged();
 
@@ -286,11 +380,11 @@ public class AppointmentActivity
     @Override
     public void showReturn(String message) {
 
-        presenter.loadAppointmentList(String.valueOf(user.getUserId()));
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-
-
-        dialog.dismiss();
+//        presenter.loadAppointmentList(String.valueOf(user.getUserId()));
+//        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+//
+//
+//        dialog.dismiss();
 
     }
 
@@ -335,7 +429,7 @@ public class AppointmentActivity
                 newCalendar.get(Calendar.MONTH),
                 newCalendar.get(Calendar.DAY_OF_MONTH)
         );
-        int daysallowable = 2;//get from database
+        int daysallowable = 1;//get from database
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, daysallowable);
       //  Cal dateBefore30Days = cal.getTime();
@@ -355,9 +449,9 @@ public class AppointmentActivity
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-      //  dateBinding.etAppointDate.setText(dateFormatter.format(newDate.getTime()));
+        dialogBinding.etDate.setText(dateFormatter.format(newDate.getTime()));
 
-
+        selectedDate = dialogBinding.etDate.getText().toString();
 
     }
 
@@ -377,18 +471,109 @@ public class AppointmentActivity
 
 
 
-    public void chooseDateandSlot()
+    public void dialogSetAppointment()
     {
 
+//        dialog = new Dialog(getContext());
+//
+//        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+//
+//        dialogBinding = DataBindingUtil.inflate(
+//                getLayoutInflater(),
+//                R.layout.dialog_add_appointment,
+//                null,
+//                false);
+//
+
+        dialogBinding.setView(getMvpView());
+
+
+        dialogBinding.recyclerView.setAdapter(assesTypeAdapter);
+
+
+        dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        List<String> assestType = new ArrayList<>();
+        assestType.add("Assessment and Payment");
+        assestType.add("Payment");
+        assesTypeAdapter.setAssessResult(assestType);
+
+
+//        dialogBinding.recyclerView2.setAdapter(serviceListAdapter);
+//
+//
+//        dialogBinding.recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
+//        dialogBinding.recyclerView2.setItemAnimator(new DefaultItemAnimator());
+
+
+//        dialogBinding.layoutAppointment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(!selectedDealerId.equals(""))
+//                    chooseDateandSlot();
+//                else
+//                    showError("Please Select Dealer First");
+//            }
+//        });
+
+
+
+        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                assesTypeAdapter.reset();
+                selectedBaranagay="";selectedTaxtype="";selectedDate="";
+            }
+        });
+
+        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(assesTypeAdapter.getSelected().equals(""))
+                {
+                    showError("Please Select Transacion");
+                }else if(selectedTaxtype.equals(""))
+                {
+                    showError("Please Select Tax Type");
+                }else if(selectedDate.equals(""))
+                {
+                    showError("Please Select Date");
+                }else if(selectedBaranagay.equals(""))
+                {
+                    showError("Please Select Barangay");
+                }
+                else
+                presenter.assessmentAppointment(assesTypeAdapter.getSelected(),selectedTaxtype,selectedDate,selectedBaranagay,token.getToken());
+
+            }
+        });
+
+        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setCancelable(false);
+        dialog.show();
 
 
     }
 
-    public void confirmResched(final String date, final String schedid)
+
+    @Override
+    public void layoutSwitch(int switcher)
     {
-
-
+        if(switcher==1) {
+            dialogBinding.taxAssess.setVisibility(View.GONE);
+            dialogBinding.taxPayment.setVisibility(View.VISIBLE);
+        }
+            else
+        {
+            dialogBinding.taxAssess.setVisibility(View.VISIBLE);
+            dialogBinding.taxPayment.setVisibility(View.GONE);
+        }
     }
+
+
 
 
 

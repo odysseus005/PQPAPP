@@ -10,9 +10,13 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ItemCurrentAppointmentBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
+import pasigqueueportal.com.pqpapp.model.data.Barangay;
+import pasigqueueportal.com.pqpapp.model.data.TaxType;
+import pasigqueueportal.com.pqpapp.util.FunctionUtils;
 
 
 public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.ViewHolder> {
@@ -20,12 +24,14 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     private final Context context;
     private final AppointmentView view;
     private static final int VIEW_TYPE_DEFAULT = 0;
+    private Realm realm;
 
 
-    public AppointmentAdapter(Context context, AppointmentView view) {
+    public AppointmentAdapter(Context context, AppointmentView view,Realm realm) {
         this.context = context;
         this.view = view;
         appointment = new ArrayList<>();
+        this.realm = realm;
     }
 
 
@@ -54,12 +60,12 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
            holder.itemAppointmentBinding.setView(view);
 
 
-//           holder.itemAppointmentBinding.appointListDate.setText(FunctionUtils.appointListTimestampMonDate(appointment.get(position).getAppointDate()));
-//           holder.itemAppointmentBinding.appointListYear.setText(FunctionUtils.appointListTimestampYear(appointment.get(position).getAppointDate()));
-//
-//           holder.itemAppointmentBinding.appointListTime.setText(FunctionUtils.hour24to12hour(appointment.get(position).getAppointschedTime()));
-//
-//           holder.itemAppointmentBinding.appointmentStatusColor.setBackgroundColor(getStatusColor(appointment.get(position).getAppointStatus()));
+           holder.itemAppointmentBinding.appointListTaxType.setText( getTaxType(appointment.get(position).getAppointmentTaxType()).getTaxTypeDesc());
+           holder.itemAppointmentBinding.appointListTransType.setText(getTransactionType(Integer.parseInt(appointment.get(position).getAppointmentTransType())));
+           holder.itemAppointmentBinding.appointListDate.setText(FunctionUtils.appointListTimestampMonDate(appointment.get(position).getAppointmentTransDate()));
+           holder.itemAppointmentBinding.appointListYear.setText(FunctionUtils.appointListTimestampYear(appointment.get(position).getAppointmentTransDate()));
+           holder.itemAppointmentBinding.appointListTime.setText(FunctionUtils.hour24to12hour(appointment.get(position).getAppointmentTransTime()));
+           holder.itemAppointmentBinding.appointmentStatusColor.setBackgroundColor(getStatusColor(appointment.get(position).getAppointmentTransStatus()));
 
     }
 
@@ -68,30 +74,21 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         int returnColor=0;
         switch (status)
         {
-            case "CONFIRMED":
+            case "P":
                 returnColor = Color.parseColor("#9ccc65");
                 break;
-            case "CANCELLED":
+            case "N":
 
                 returnColor = Color.parseColor("#b95d5d");
                 break;
 
-            case "RESCHEDULE":
-                returnColor = Color.parseColor("#78a741");
-
-                break;
-
-            case "NO SHOW":
-                returnColor = Color.parseColor("#424242");
-
-                break;
-            case "SUCCESSFUL":
+            case "S":
                 returnColor = Color.parseColor("#9ccc65");
 
                 break;
 
             default:
-                returnColor = Color.parseColor("#caad51");
+                returnColor = Color.parseColor("#9ccc65");
                 break;
 
         }
@@ -125,4 +122,27 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
 
     }
+
+    public String getTransactionType(int id)
+    {
+
+        if(id==0)
+            return "Assessment and Payment";
+        else
+            return "Payment";
+    }
+
+    TaxType getTaxType(String id){
+        return realm.where(TaxType.class)
+                .equalTo("taxTypeId", id)
+                .findFirst();
+    }
+
+    Barangay getBarangay(String id){
+        return realm.where(Barangay.class)
+                .equalTo("barangayId", id)
+                .findFirst();
+    }
+
+
 }

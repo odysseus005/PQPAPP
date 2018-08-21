@@ -84,30 +84,21 @@ public class PastAppointmentAdapter extends RecyclerView.Adapter<PastAppointment
 
         switch (status)
         {
-            case "CONFIRMED":
+            case "P":
                 returnColor = Color.parseColor("#9ccc65");
                 break;
-            case "CANCELLED":
+            case "N":
 
                 returnColor = Color.parseColor("#b95d5d");
                 break;
 
-            case "RESCHEDULE":
+            case "S":
                 returnColor = Color.parseColor("#9ccc65");
 
                 break;
 
-            case "NO SHOW":
-                returnColor = Color.parseColor("#424242");
-
-                break;
-            case "SUCCESSFUL":
-                returnColor = Color.parseColor("#78a741");
-
-                break;
-
             default:
-                returnColor = Color.parseColor("#caad51");
+                returnColor = Color.parseColor("#9ccc65");
                 break;
 
         }

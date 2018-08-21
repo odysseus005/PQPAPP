@@ -4,9 +4,13 @@ package pasigqueueportal.com.pqpapp.app;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
+import pasigqueueportal.com.pqpapp.model.response.BarangayResponse;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
+import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -75,6 +79,48 @@ public interface ApiInterface {
 
 
 
+    //Appointment
 
+    @GET(Endpoints.GET_APPOINT)
+    Call<AppointmentResponse>getUserAppointment(@Header(Constants.ACCEPT) String json,
+                                                @Header(Constants.AUTHORIZATION) String authorization
+
+    );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.APPOINTMENT)
+    Call<ResultResponse>assessAppointment( @Header(Constants.ACCEPT) String json,
+                                        @Header(Constants.AUTHORIZATION) String authorization,
+                                  @Field(Constants.TRANSACTION_TYPE) String trans_type,
+                                  @Field(Constants.TAX_TYPE_ID) String tax_type_id,
+                                  @Field(Constants.TRANSACTION_DATE) String trans_date,
+                                  @Field(Constants.BARANGAY_ID) String baranagay_id
+
+    );
+
+    @FormUrlEncoded
+    @POST(Endpoints.APPOINTMENT)
+    Call<ResultResponse>paymentAppointment( @Header(Constants.ACCEPT) String json,
+                                        @Header(Constants.AUTHORIZATION) String authorization,
+                                            @Field(Constants.TRANSACTION_TYPE) String trans_type,
+                                            @Field(Constants.TAX_TYPE_ID) String tax_type_id,
+                                            @Field(Constants.TRANSACTION_DATE) String trans_date,
+                                            @Field(Constants.BARANGAY_ID) String baranagay_id,
+                                            @Field(Constants.QUEUE_ID) String que_id
+
+    );
+
+    @GET(Endpoints.GET_TAXTYPE)
+    Call<TaxTypeResponse>getTaxType(@Header(Constants.ACCEPT) String json,
+                                 @Header(Constants.AUTHORIZATION) String authorization
+
+    );
+
+    @GET(Endpoints.GET_BARANGAY)
+    Call<BarangayResponse>getBarangay(@Header(Constants.ACCEPT) String json,
+                                      @Header(Constants.AUTHORIZATION) String authorization
+
+    );
 
 }

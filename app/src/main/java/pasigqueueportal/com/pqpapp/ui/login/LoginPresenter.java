@@ -69,14 +69,14 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
 
                                     }else
                                     {
-
+                                        getView().showAlert(response.body().getMessage());
                                     }
                                 } catch (NullPointerException e) {
                                     e.printStackTrace();
                                     getView().showAlert("Oops");
                                 }
                             } else {
-                                getView().showAlert("Wrong Password or Email!");
+                                getView().showAlert("Error Connecting to Server");
                             }
                         }
 
@@ -97,7 +97,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
             public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
                 getView().stopLoading();
                 if (response.isSuccessful()) {
-                    if (response.isSuccessful()) {
+
 
                         final Realm realm = Realm.getDefaultInstance();
                         realm.executeTransactionAsync(new Realm.Transaction() {
@@ -125,12 +125,10 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                 getView().showAlert("Error Saving API Response");
                             }
                         });
-                    } else {
-                        getView().showAlert("Error Connecting to Server");
-                    }
+
                 } else {
-                    getView().showAlert(response.message() != null ? response.message()
-                            : "Unknown Error");
+
+                    getView().showAlert(response.body().getMessage());
                 }
             }
 

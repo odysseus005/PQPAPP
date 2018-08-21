@@ -22,30 +22,10 @@ public class Endpoints {
     public static final String FIRSTLOGIN = "firstLogin";
 
 
-
-    //Garage
-    public static final String GARAGE = "new_car.php?";
-    public static final String GET_GARAGE = "allGarage";
-    public static final String ADD_GARAGE = "registerGarageCar";
-    public static final String UPDATE_GARAGE = "editGarage";
-    public static final String DELETE_GARAGE = "deleteGarage";
-
-
-    //Data
-    public static final String DATA = "new_alldata.php?";
-    public static final String GET_DEALER = "allDealer";
-    public static final String GET_SERVICE = "allService";
-    public static final String GET_PMS = "allPMS";
-    public static final String GET_ADVISOR = "allAdvisor";
-
-
-    //Schedule
-    public static final String SCHEDULE = "new_schedule.php?";
-    public static final String GET_APPOINTMENT = "allReservation";
-    public static final String GET_APPOINTMENTPAST = "allPastReservation";
-    public static final String GET_TIMESLOT = "daySchedule";
-    public static final String RESERVE_TIMESLOT = "registerReservation";
-    public static final String CANCEL_APPOINTMENT = "cancelReservation";
-    public static final String RESCHED_APPOINTMENT = "reschedReservation";
+    //Appointment
+    public static final String GET_APPOINT = "user/queue";
+    public static final String GET_TAXTYPE = "taxtypes";
+    public static final String GET_BARANGAY = "barangay";
+    public static final String APPOINTMENT = "queue";
 
 }

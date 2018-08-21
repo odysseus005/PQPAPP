@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   >
+
+    <data>
+        <import type="pasigqueueportal.com.pqpapp.util.FunctionUtils"/>
+
+        <variable
+            name="view"
+            type="pasigqueueportal.com.pqpapp.ui.main.currentAppointment.AppointmentView" />
+
+        <variable
+            name="appointment"
+            type="pasigqueueportal.com.pqpapp.model.data.Appointment" />
+
+
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@color/colorPrimary"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/activity_vertical_margin"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:paddingTop="@dimen/activity_vertical_margin">
+
+
+
+                        <TextView
+                            android:id="@+id/txt_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/nav_header_vertical_spacing"
+                            android:text="1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
+
+                        <TextView
+                            android:id="@+id/txt_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="Queue Number"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/gray"
+                            android:src="@drawable/ic_nav_appointment"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Appointment Details"
+                            android:layout_marginLeft="3dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginLeft="3dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/gray"
+                            android:src="@drawable/ic_appointment_info"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Information"
+                            android:layout_marginLeft="0dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{"Transaction ID: "+appointment.appointmentId}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:id="@+id/detailTransType"
+                        android:text='Transaction Type: Payment'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:id="@+id/detailTaxType"
+                        android:text='Tax Type: Bussiness Tax'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:id="@+id/detailBarangay"
+                        android:layout_marginRight="30dp"
+                        android:text='Barangay: Palatiw'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginLeft="3dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/gray"
+                            android:src="@drawable/ic_appointment_schedule"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Schedule"
+                            android:layout_marginLeft="0dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{FunctionUtils.toReadable(appointment.appointmentTransDate)+" "+FunctionUtils.appointListTimestampYear(appointment.appointmentTransDate)}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{"Call Time: "+appointment.appointmentTransTime}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+
+
+
+
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="@dimen/activity_half_margin"
+                        android:gravity="center|right"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:text='Appointment Status'
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/gray"
+                        />
+                    <TextView
+                        android:id="@+id/appointmentDetailsStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center|right"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text='@{appointment.appointmentTransStatus}'
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/black"
+
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:weightSum="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/cancel"
+                        android:layout_width="0dp"
+                        android:layout_weight=".5"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="@dimen/activity_half_margin"
+                        android:background="@drawable/button_rounded_red"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:visibility="gone"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text="Cancel Appointment"
+                        android:textAllCaps="true"
+                        android:paddingRight="25dp"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_below="@+id/LinearMoTo" />
+
+
+                    <TextView
+                        android:id="@+id/resched"
+                        android:layout_width="0dp"
+                        android:layout_weight=".5"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="@dimen/activity_half_margin"
+                        android:background="@drawable/button_rounded_green"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text="view Reminders"
+                        android:textAllCaps="true"
+                        android:paddingRight="25dp"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_below="@+id/LinearMoTo" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/rounded_button_solid"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
+                        android:layout_marginTop="18dp"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text="Close"
+                        android:textAllCaps="true"
+                        android:gravity="center|right"
+                        android:paddingRight="25dp"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</layout>

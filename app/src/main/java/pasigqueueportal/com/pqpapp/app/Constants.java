@@ -33,26 +33,13 @@ public class Constants {
     public static final String ADDRESS = "address";
 
 
-    //Garage
-    public static final String GARAGE_ID = "g_id";
-    public static final String GARAGE_MODEL = "g_model";
-    public static final String GARAGE_YEAR_MODEL = "g_yearModel";
-    public static final String GARAGE_PLATE = "g_plateNum";
-    public static final String GARAGE_CHASSIS = "g_chassis";
-    public static final String GARAGE_PURCHASE = "g_purchaseDate";
-    public static final String GARAGE_NAME = "g_name";
+    //Appointment
+    public static final String TRANSACTION_TYPE = "transaction_type";
+    public static final String TAX_TYPE_ID = "tax_type_id";
+    public static final String TRANSACTION_DATE = "transaction_date";
+    public static final String BARANGAY_ID = "barangay_id";
+    public static final String QUEUE_ID = "queue_id";
 
 
-    //Dealer
-    public static final String DEALER_ID = "dealer_id";
-
-    //Reservation
-    public static final String RESERVATION_ID = "reserve_id";
-    public static final String SCHEDULE_ID = "schedule_id";
-    public static final String ADVISOR_ID = "advisor_id";
-    public static final String SERVICE_ID = "service_id";
-    public static final String PMS_SERVICE_ID = "pms_service_id";
-    public static final String RESERVE_DATE = "reserve_date";
-    public static final String RESERVE_REMARK = "reserve_remarks";
 
 }

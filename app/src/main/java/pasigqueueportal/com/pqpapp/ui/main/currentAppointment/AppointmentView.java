@@ -19,6 +19,12 @@ public interface AppointmentView extends MvpView {
 
     void showAppointmentDetails(Appointment appoint);
 
+    void loadTaxType();
+
+    void loadBarangay();
+
+    void layoutSwitch(int switcher);
+
     void stopRefresh();
 
     void showError(String message);
