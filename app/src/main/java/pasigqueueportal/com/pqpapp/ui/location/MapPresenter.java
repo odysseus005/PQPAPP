@@ -28,7 +28,40 @@ public class MapPresenter extends MvpNullObjectBasePresenter<MapView> {
 
 
         public void loadDealerList(int userID) {
-           getView().updateMap();
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.delete(TaxCompany.class);
+                }
+            });
+            // for (Dealer company : companys) {
+       //     Double distance = DistanceUtil.distanceBetween(latitude, longitude,14.5596217, 121.0811967);
+            final TaxCompany nearest = new TaxCompany();
+            nearest.setDealerId(1);
+            nearest.setDealerName("Pasig City Hall");
+            nearest.setDealerAddress("Caruncho Ave, Barangay San Nicolas, Pasig, 1600 Metro Manila");
+            nearest.setDealerClosing("8:00");
+            nearest.setDealerOpening("6:00");
+            nearest.setDealerLat("14.5596217");
+            nearest.setDealerLong("121.0811967");
+            nearest.setDealerContact("212121212");
+            nearest.setDealerImage("image");
+         //   nearest.setDistance(distance);
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealmOrUpdate(nearest);
+
+                    getView().updateMap();
+                }
+            });
+            // }
+            getView().stopLoading();
+            realm.close();
+
+
         }
 
 
@@ -49,15 +82,15 @@ public class MapPresenter extends MvpNullObjectBasePresenter<MapView> {
             }
         });
        // for (Dealer company : companys) {
-            Double distance = DistanceUtil.distanceBetween(latitude, longitude,14.12121212, 121.2121212);
+            Double distance = DistanceUtil.distanceBetween(latitude, longitude,14.5596217, 121.0811967);
             final TaxCompany nearest = new TaxCompany();
             nearest.setDealerId(1);
-            nearest.setDealerName("name");
-            nearest.setDealerAddress("sasas");
-            nearest.setDealerClosing("sasasas");
-            nearest.setDealerOpening("2121212");
-            nearest.setDealerLat("14.12121212");
-            nearest.setDealerLong("121.2121212");
+            nearest.setDealerName("Pasig City Hall");
+            nearest.setDealerAddress("Caruncho Ave, Barangay San Nicolas, Pasig, 1600 Metro Manila");
+            nearest.setDealerClosing("18:00:00");
+            nearest.setDealerOpening("08:00:00");
+            nearest.setDealerLat("14.5596217");
+            nearest.setDealerLong("121.0811967");
             nearest.setDealerContact("212121212");
             nearest.setDealerImage("image");
             nearest.setDistance(distance);

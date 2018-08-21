@@ -14,6 +14,7 @@ public class Endpoints {
     //User
     public static final String VERIFY_CODE = "verify";
     public static final String LOGIN = "login";
+    public static final String TOKEN = "token/refresh";
     public static final String REGISTER = "register";
     public static final String GET_USER = "user";
     public static final String UPDATEUSER = "profile";

@@ -275,7 +275,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
              int nearID = Integer.parseInt(marker.getSnippet());
 
 
-             nearDealer= realm.where(TaxCompany.class).equalTo("dealerId", nearID).findFirst();
+             nearDealer= realm.where(TaxCompany.class).equalTo("companyId", nearID).findFirst();
 
 
              if (nearDealer.isLoaded() || nearDealer.isValid())

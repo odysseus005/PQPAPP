@@ -105,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Name"
+                    android:text="First Name"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
 
                 <!-- first name -->
@@ -114,9 +114,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-
                     android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:text='@{user.fullName}'
+                    android:text='@{user.firstname}'
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLength="100"
+                    android:padding="12dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:textColorHint="@android:color/darker_gray" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Last Name"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption" />
+
+                <!-- first name -->
+                <EditText
+                    android:id="@+id/et_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:text='@{user.lastname}'
                     android:inputType="textPersonName|textCapWords"
                     android:maxLength="100"
                     android:padding="12dp"

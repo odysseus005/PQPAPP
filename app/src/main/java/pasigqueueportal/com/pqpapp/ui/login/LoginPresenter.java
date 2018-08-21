@@ -24,6 +24,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
     private static final String TAG = LoginPresenter.class.getSimpleName();
     Token token;
     User user;
+    Token token1;
 
     public void login(final String email, final String password) {
         if (email.isEmpty() || email.equals("")) {
@@ -143,6 +144,58 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
 
     }
 
+
+    public void refresh(String token) {
+        getView().startLoading();
+        App.getInstance().getApiInterface().refreshToken( Constants.APPJSON,token).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, final Response<LoginResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+
+                    final Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.delete(Token.class);
+                            token1 = response.body().getToken();
+                            realm.copyToRealmOrUpdate(token1);
+
+                        }
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            realm.close();
+
+
+                            getView().onLoginSuccess2(token1);
+
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            realm.close();
+                            Log.e(TAG, "onError: Unable to save USER", error);
+                            getView().showAlert("Error Saving API Response");
+                        }
+                    });
+
+                } else {
+
+                    getView().showAlert(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                getView().stopLoading();
+                Log.e(TAG, "onFailure: Error calling login api", t);
+                getView().stopLoading();
+                getView().showAlert("Error Connecting to Server");
+            }
+        });
+
+    }
 
 
     public void firstLogin(String token, final User userSave) {

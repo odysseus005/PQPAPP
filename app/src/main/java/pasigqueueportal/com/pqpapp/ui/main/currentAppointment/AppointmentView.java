@@ -27,6 +27,8 @@ public interface AppointmentView extends MvpView {
 
     void stopRefresh();
 
+    void onFinishTokenRef();
+
     void showError(String message);
 
     void showReturn(String message);

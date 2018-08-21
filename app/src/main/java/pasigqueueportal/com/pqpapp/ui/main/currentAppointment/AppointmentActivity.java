@@ -44,6 +44,7 @@ import io.realm.RealmResults;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityAppointmentCurrentBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAddAppointmentBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
@@ -69,7 +70,8 @@ public class AppointmentActivity
     private AppointmentAdapter appointmentListAdapter;
     private AssesTypeAdapter assesTypeAdapter;
     private DialogAddAppointmentBinding dialogBinding;
-    private Dialog dialog;
+    private DialogAppointmentDetailBinding detailBinding;
+    private Dialog dialog,dialogDetail;
     private Token token;
     private  String selectedBaranagay="",selectedTaxtype="",selectedDate="";
     public AppointmentActivity(){
@@ -128,7 +130,7 @@ public class AppointmentActivity
             //  finish();
         }
 
-        presenter.onStart();
+        presenter.onStart(token.getTokenRefresh());
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Appointment");
 
 
@@ -170,8 +172,7 @@ public class AppointmentActivity
                 null,
                 false);
 
-        presenter.loadBarangay(token.getToken());
-        presenter.loadTaxType(token.getToken());
+
 
     }
 
@@ -219,7 +220,7 @@ public class AppointmentActivity
     public void onResume() {
         super.onResume();
 
-        presenter.loadAppointmentList(token.getToken());
+
     }
 
 
@@ -290,7 +291,6 @@ public class AppointmentActivity
         if(!taxTypeRealmResults.isEmpty()) {
             for (TaxType value : taxTypeRealmResults) {
                 tax.add(value.getTaxTypeDesc());
-                Log.d(">>>>>",value.getTaxTypeDesc());
             }
 
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_custom_item, tax);
@@ -367,6 +367,17 @@ public class AppointmentActivity
 
 
     @Override
+    public  void onFinishTokenRef()
+    {
+        token = realm.where(Token.class).findFirst();
+
+        presenter.loadAppointmentList(token.getToken());
+        presenter.loadBarangay(token.getToken());
+        presenter.loadTaxType(token.getToken());
+    }
+
+
+    @Override
     public void stopRefresh() {
         binding.swipeRefreshLayout.setRefreshing(false);
     }
@@ -398,8 +409,74 @@ public class AppointmentActivity
 
 
 
+        dialogDetail = new Dialog(getContext(),R.style.RaffleDialogTheme);
+
+        dialogDetail.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        detailBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_appointment_detail,
+                null,
+                false);
+
+
+        detailBinding.setView(getMvpView());
+        detailBinding.setAppointment(appointment);
+
+
+        detailBinding.detailTaxType.setText((presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
+        detailBinding.detailTransType.setText(presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
+        detailBinding.detailBarangay.setText((presenter.getBarangay(appointment.getAppointmentBaranagay())).getBarangayName());
+
+
+
+        detailBinding.appointmentDetailsStatus.setTextColor(appointmentListAdapter.getStatusColor(appointment.getAppointmentTransStatus()));
+
+
+
+        detailBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                new AlertDialog.Builder(getContext())
+//                        .setTitle("Are you sure you want cancel your appointment?")
+//                        .setPositiveButton( "Yes", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                presenter.cancelReservation(String.valueOf(appointment.getAppointId()));
+//                            }
+//                        })
+//                        .setNegativeButton( "Cancel", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                            }
+//                        })
+//
+//                        .show();
+
+            }
+        });
+
+//        detailBinding.resched.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
+
+        detailBinding.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDetail.dismiss();
+            }
+        });
+
+        dialogDetail.setContentView(detailBinding.getRoot());
+        dialogDetail.setCancelable(true);
+        dialogDetail.show();
 
     }
+
 
 
 

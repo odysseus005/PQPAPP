@@ -12,7 +12,7 @@ public class Barangay extends RealmObject {
     @PrimaryKey
     @SerializedName("id")
     @Expose
-    private int barangayId;
+    private String barangayId;
 
 
     @SerializedName("name")
@@ -20,11 +20,11 @@ public class Barangay extends RealmObject {
     private String barangayName;
 
 
-    public int getBarangayId() {
+    public String getBarangayId() {
         return barangayId;
     }
 
-    public void setBarangayId(int barangayId) {
+    public void setBarangayId(String barangayId) {
         this.barangayId = barangayId;
     }
 

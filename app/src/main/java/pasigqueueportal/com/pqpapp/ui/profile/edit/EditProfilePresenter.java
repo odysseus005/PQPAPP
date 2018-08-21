@@ -32,31 +32,31 @@ public class EditProfilePresenter extends MvpNullObjectBasePresenter<EditProfile
     }
 
 
-    public void updateUser(String token, String firstName, String lastName, String contact, String birthday, String address, String position) {
+    public void updateUser(String token, String firstName, String lastName, String contact, String birthday, String address) {
         if (firstName.equals("") || lastName.equals("") || birthday.equals("") || contact.equals("") || address.equals("")) {
             getView().showAlert("Fill-up all fields");
         } else {
             getView().startLoading();
             App.getInstance().getApiInterface().updateUser(Constants.APPJSON,Constants.BEARER+token, firstName, lastName,  birthday, address)
-                    .enqueue(new Callback<User>() {
+                    .enqueue(new Callback<ResultResponse>() {
                         @Override
-                        public void onResponse(Call<User> call, final Response<User> response) {
+                        public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful() && response.body().getUserId() == user.getUserId()) {
+                            if (response.body().isSuccess()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
-                                        realm.copyToRealmOrUpdate(response.body());
+                                        realm.copyToRealmOrUpdate(response.body().getUser());
                                         getView().finishAct();
                                     }
                                 });
                             } else {
-                                getView().showAlert("Oops something went wrong");
+                                getView().showAlert(response.body().getMessage());
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(Call<ResultResponse> call, Throwable t) {
                             Log.e(TAG, "onFailure: Error calling login api", t);
                             getView().stopLoading();
                             getView().showAlert("Error Connecting to Server");

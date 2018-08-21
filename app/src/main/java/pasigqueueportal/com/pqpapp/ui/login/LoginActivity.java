@@ -66,8 +66,10 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
         dialog = new Dialog(LoginActivity.this);
         user = realm.where(User.class).findFirst();
         token = realm.where(Token.class).findFirst();
-        if (user != null)
+        if (user != null) {
             onLoginConfirm(user);
+           // presenter.refresh(token.getTokenRefresh());
+        }
 
 
 
@@ -178,11 +180,22 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
     }
 
+
+    @Override
+    public void onLoginSuccess2(final Token token) {
+
+        user = realm.where(User.class).findFirst();
+        onLoginConfirm(user);
+
+    }
+
     @Override
     public void onLoginConfirm(final User user) {
 
 
         token = realm.where(Token.class).findFirst();
+
+       // showAlert("Code: "+user.getCode());
 
         if(!(user.getFirstlogin().equalsIgnoreCase("1")))
         {
@@ -194,6 +207,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
                     null,
                     false);
 
+
             dialogBinding.send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -202,6 +216,8 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
                     else
                         showAlert("Invalid Code");
 
+
+                    showAlert("Code: "+user.getCode());
                 }
             });
 

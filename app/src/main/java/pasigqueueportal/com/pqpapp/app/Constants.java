@@ -11,6 +11,7 @@ public class Constants {
     public static final String TAG = "tag";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String TOKEN_REFRESH = "refresh_token";
     public static final String DATE = "date";
     public static final String AUTHORIZATION = "Authorization";
     public static final String ACCEPT = "Accept";

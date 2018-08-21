@@ -13,8 +13,10 @@ import pasigqueueportal.com.pqpapp.app.Constants;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
+import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
 import pasigqueueportal.com.pqpapp.model.response.BarangayResponse;
+import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
 import retrofit2.Call;
@@ -26,10 +28,11 @@ import retrofit2.Response;
 public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
 
     private Realm realm;
-    public void onStart() {
+    private Token token1;
+    public void onStart(String token) {
         realm = Realm.getDefaultInstance();
 
-
+        refresh(token);
     }
 
     public void loadAppointmentList(String token) {
@@ -242,8 +245,81 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
     }
 
 
+    public void refresh(String token) {
+        getView().startLoading();
+        App.getInstance().getApiInterface().refreshToken( Constants.APPJSON,token).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, final Response<LoginResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+
+                    final Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.delete(Token.class);
+                            token1 = response.body().getToken();
+                            realm.copyToRealmOrUpdate(token1);
+
+                        }
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            realm.close();
+                            getView().onFinishTokenRef();
 
 
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            realm.close();
+                          //  Log.e(TAG, "onError: Unable to save USER", error);
+                            getView().showError("Error Loading Data Please Restart App");
+                        }
+                    });
+
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                getView().stopLoading();
+              //  Log.e(TAG, "onFailure: Error calling login api", t);
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+    }
+
+
+
+
+
+    public String getTransactionType(int id)
+    {
+
+        if(id==0)
+            return "Assessment and Payment";
+        else
+            return "Payment";
+    }
+
+    TaxType getTaxType(String id){
+        return realm.where(TaxType.class)
+                .equalTo("taxTypeId", id)
+                .findFirst();
+    }
+
+    Barangay getBarangay(String id){
+        return realm.where(Barangay.class)
+                .equalTo("barangayId", id)
+                .findFirst();
+    }
 
 
 

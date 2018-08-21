@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -60,7 +61,8 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
            holder.itemAppointmentBinding.setView(view);
 
 
-           holder.itemAppointmentBinding.appointListTaxType.setText( getTaxType(appointment.get(position).getAppointmentTaxType()).getTaxTypeDesc());
+        Log.d(">>>>>",(getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
+           holder.itemAppointmentBinding.appointListTaxType.setText((getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
            holder.itemAppointmentBinding.appointListTransType.setText(getTransactionType(Integer.parseInt(appointment.get(position).getAppointmentTransType())));
            holder.itemAppointmentBinding.appointListDate.setText(FunctionUtils.appointListTimestampMonDate(appointment.get(position).getAppointmentTransDate()));
            holder.itemAppointmentBinding.appointListYear.setText(FunctionUtils.appointListTimestampYear(appointment.get(position).getAppointmentTransDate()));

@@ -51,6 +51,13 @@ public interface ApiInterface {
 
     );
 
+    @FormUrlEncoded
+    @POST(Endpoints.TOKEN)
+    Call<LoginResponse>refreshToken( @Header(Constants.ACCEPT) String json,
+                                     @Field(Constants.TOKEN_REFRESH) String refresh
+
+                                     );
+
     @PATCH(Endpoints.VERIFY_CODE)
     Call<ResultResponse> updateUserCode(@Header(Constants.ACCEPT) String json,
                                         @Header(Constants.AUTHORIZATION) String authorization);
@@ -64,8 +71,8 @@ public interface ApiInterface {
                                         @Field(Constants.PASSWORD) String password);
 
     @FormUrlEncoded
-    @POST(Endpoints.UPDATEUSER)
-    Call<User> updateUser(@Header(Constants.ACCEPT) String json,
+    @PATCH(Endpoints.UPDATEUSER)
+    Call<ResultResponse> updateUser(@Header(Constants.ACCEPT) String json,
                           @Header(Constants.AUTHORIZATION) String authorization,
                           @Field(Constants.FIRST_NAME) String firstName,
                           @Field(Constants.LAST_NAME) String lastName,

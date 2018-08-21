@@ -44,6 +44,7 @@ import io.realm.Realm;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.app.Endpoints;
 import pasigqueueportal.com.pqpapp.databinding.ActivityEditProfileBinding;
+import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.util.CircleTransform;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -58,6 +59,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
     private String TAG = EditProfileActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
     private User user;
+    private Token token;
     private Dialog dialog;
     private ArrayList<String> gender;
     private ArrayList<String> civil;
@@ -80,6 +82,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         binding.setActivity(this);
         user = realm.where(User.class).findFirst();
+        token = realm.where(Token.class).findFirst();
         binding.setUser(user);
 
         presenter.onStart();
@@ -113,11 +116,12 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
     }
     public void onEdit() {
 
-//        presenter.updateUser(user.getUserId() + "",
-//                binding.firstName.getText().toString(),
-//                binding.lastName.getText().toString(),
-//                binding.birthday.getText().toString(),
-//                binding.address.getText().toString(), user.getPosition());
+        presenter.updateUser(token.getToken() + "",
+                binding.etFirstName.getText().toString(),
+                binding.etLastName.getText().toString(),
+                binding.etMobileNumber.getText().toString(),
+                binding.etBirthday.getText().toString(),
+                binding.etAddress.getText().toString());
     }
 
     @Override
