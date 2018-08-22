@@ -254,7 +254,7 @@
                         android:layout_gravity="center"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:text='@{appointment.appointmentTransStatus}'
+                        android:text='@{FunctionUtils.convertStatus(appointment.appointmentTransStatus)}'
                         android:textAllCaps="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textColor="@color/black"

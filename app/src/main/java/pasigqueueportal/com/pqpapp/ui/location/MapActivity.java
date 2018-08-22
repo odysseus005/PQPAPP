@@ -31,6 +31,9 @@ import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Info;
+import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -81,6 +84,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     private FusedLocation fusedLocation;
     private SimpleLocation location;
     private TaxCompany nearDealer;
+    private String distance,eta;
     LocationManager locationManager;
     private User user;
     static final Integer CALL = 0x2;
@@ -447,8 +451,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
         binding.dealerContact.setText("Contact Number: "+dealer.getDealerContact());
         binding.dealerOpening.setText("Opening: "+ FunctionUtils.hour24to12hour(dealer.getDealerOpening()));
         binding.dealerClosing.setText("Closing: "+FunctionUtils.hour24to12hour(dealer.getDealerClosing()));
-        binding.dealerDistance.setText("Total Distance: "+dealer.getDistance()+" KM");
-        binding.dealerEta.setVisibility(View.GONE);
+
 
 
 
@@ -558,7 +561,15 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
         ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
         mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.parseColor("#f3bc00")));
 
+            Route route = direction.getRouteList().get(0);
+            Leg leg = route.getLegList().get(0);
+            Info distanceInfo = leg.getDistance();
+            Info durationInfo = leg.getDuration();
+            distance = distanceInfo.getText();
+            eta = durationInfo.getText();
 
+            binding.dealerDistance.setText("Total Distance: "+distance);
+            binding.dealerEta.setText("Esimated Travel Time: "+eta);
     }
     }
 

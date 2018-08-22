@@ -69,6 +69,7 @@ public class AppointmentActivity
     public String id,appointid;
     private AppointmentAdapter appointmentListAdapter;
     private AssesTypeAdapter assesTypeAdapter;
+    private UnpaidAdapter unpaidAdapter;
     private DialogAddAppointmentBinding dialogBinding;
     private DialogAppointmentDetailBinding detailBinding;
     private Dialog dialog,dialogDetail;
@@ -136,11 +137,12 @@ public class AppointmentActivity
 
         appointmentListAdapter = new AppointmentAdapter(getActivity(), getMvpView(),realm);
         assesTypeAdapter = new AssesTypeAdapter(getActivity(),getMvpView());
+        unpaidAdapter = new UnpaidAdapter(getActivity(),getMvpView(),realm);
         binding.recyclerView.setAdapter(appointmentListAdapter);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
-        // binding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -363,6 +365,8 @@ public class AppointmentActivity
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
+        binding.swipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -391,11 +395,11 @@ public class AppointmentActivity
     @Override
     public void showReturn(String message) {
 
-//        presenter.loadAppointmentList(String.valueOf(user.getUserId()));
-//        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//
-//
-//        dialog.dismiss();
+        presenter.loadAppointmentList(token.getToken());
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        selectedBaranagay="";selectedTaxtype="";selectedDate="";
+        assesTypeAdapter.reset();
+        dialog.dismiss();
 
     }
 
@@ -551,37 +555,45 @@ public class AppointmentActivity
     public void dialogSetAppointment()
     {
 
-//        dialog = new Dialog(getContext());
-//
-//        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-//
-//        dialogBinding = DataBindingUtil.inflate(
-//                getLayoutInflater(),
-//                R.layout.dialog_add_appointment,
-//                null,
-//                false);
-//
-
         dialogBinding.setView(getMvpView());
-
-
         dialogBinding.recyclerView.setAdapter(assesTypeAdapter);
 
 
         dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        List<String> assestType = new ArrayList<>();
+        final List<String> assestType = new ArrayList<>();
         assestType.add("Assessment and Payment");
         assestType.add("Payment");
         assesTypeAdapter.setAssessResult(assestType);
 
 
-//        dialogBinding.recyclerView2.setAdapter(serviceListAdapter);
-//
-//
-//        dialogBinding.recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
-//        dialogBinding.recyclerView2.setItemAnimator(new DefaultItemAnimator());
+
+
+        dialogBinding.recyclerView2.setAdapter(unpaidAdapter);
+
+
+        dialogBinding.recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
+        dialogBinding.recyclerView2.setItemAnimator(new DefaultItemAnimator());
+
+        appointmentlmResults = realm.where(Appointment.class).findAll();
+        unpaidAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+                .contains("appointmentTransType","2" )
+                .contains("appointmentTransStatus","P")
+                .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+
+        unpaidAdapter.notifyDataSetChanged();
+
+
+
+        if(unpaidAdapter.getItemCount()==0)
+        {
+
+            dialogBinding.unpaidList.setVisibility(View.VISIBLE);
+            dialogBinding.recyclerView2.setVisibility(View.GONE);
+        }
+
+
 
 
 //        dialogBinding.layoutAppointment.setOnClickListener(new View.OnClickListener() {
@@ -622,8 +634,19 @@ public class AppointmentActivity
                 {
                     showError("Please Select Barangay");
                 }
-                else
-                presenter.assessmentAppointment(assesTypeAdapter.getSelected(),selectedTaxtype,selectedDate,selectedBaranagay,token.getToken());
+                else {
+
+                    if(assesTypeAdapter.getSelected().equals("0"))
+                    presenter.assessmentAppointment(assesTypeAdapter.getSelected(), selectedTaxtype, selectedDate, selectedBaranagay, token.getToken());
+                   else if(assesTypeAdapter.getSelected().equals("1")) {
+                        if(unpaidAdapter.getSelected().equals("true")) {
+                            Appointment appointment = unpaidAdapter.getValue();
+                            presenter.paymentAppointment(assesTypeAdapter.getSelected(), appointment.getAppointmentTaxType(), selectedDate, appointment.getAppointmentBaranagay(), token.getToken(),appointment.getAppointmentId());
+                        }
+                        else
+                            showError("Please Select Unpaid Transaction");
+                    }
+                }
 
             }
         });

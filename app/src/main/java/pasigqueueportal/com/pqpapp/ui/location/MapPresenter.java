@@ -45,7 +45,7 @@ public class MapPresenter extends MvpNullObjectBasePresenter<MapView> {
             nearest.setDealerOpening("6:00");
             nearest.setDealerLat("14.5596217");
             nearest.setDealerLong("121.0811967");
-            nearest.setDealerContact("212121212");
+            nearest.setDealerContact("(02)6431111");
             nearest.setDealerImage("image");
          //   nearest.setDistance(distance);
 
@@ -91,7 +91,7 @@ public class MapPresenter extends MvpNullObjectBasePresenter<MapView> {
             nearest.setDealerOpening("08:00:00");
             nearest.setDealerLat("14.5596217");
             nearest.setDealerLong("121.0811967");
-            nearest.setDealerContact("212121212");
+            nearest.setDealerContact("(02)6431111");
             nearest.setDealerImage("image");
             nearest.setDistance(distance);
 

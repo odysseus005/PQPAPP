@@ -201,14 +201,65 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
             public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
                 getView().stopLoading();
                 if (response.isSuccessful()) {
+                    if (response.body().isSuccess()) {
+
+                        final Realm realm = Realm.getDefaultInstance();
+                        realm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+
+
+                            }
+                        }, new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                realm.close();
+                                getView().showReturn("Appointment Successful");
+
+                            }
+                        }, new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                realm.close();
+                                getView().showError("Error Saving API Response");
+                            }
+                        });
+                    }else
+                        getView().showError(response.body().getMessage());
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
+
+
+    public void paymentAppointment(String trans_type,String tax_type,String trans_date,String baranagay, String token,String id)
+    {
+        getView().startLoading();
+        App.getInstance().getApiInterface().paymentAppointment( Constants.APPJSON,Constants.BEARER+token,trans_type,tax_type,trans_date,baranagay,id).enqueue(new Callback<ResultResponse>() {
+            @Override
+            public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
 
 
                     final Realm realm = Realm.getDefaultInstance();
                     realm.executeTransactionAsync(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                          //  realm.delete(Barangay.class);
-                          //    realm.copyToRealmOrUpdate(response.body().getBarangay());
+                            //  realm.delete(Barangay.class);
+                            //    realm.copyToRealmOrUpdate(response.body().getBarangay());
 
 
                         }
@@ -216,7 +267,7 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         @Override
                         public void onSuccess() {
                             realm.close();
-                            getView().loadBarangay();
+                            getView().showReturn("Appointment Successful");
 
                         }
                     }, new Realm.Transaction.OnError() {

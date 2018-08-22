@@ -88,7 +88,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
                         android:text="Select Transaction"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="@color/gray" />
 
                 </LinearLayout>
@@ -132,10 +132,24 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="3dp"
                             android:text="Select Unpaid Transaction"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:textColor="@color/gray" />
 
                     </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:padding="30dp"
+                        android:gravity="center"
+                        android:text="No Unpaid Transaction"
+                        android:textColor="@color/lightGray"
+                        android:textStyle="bold"
+                        android:id="@+id/unpaidList"
+                        android:visibility="gone"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+
 
 
                     <android.support.v7.widget.RecyclerView
@@ -176,7 +190,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
                         android:text="Select Tax Type"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="@color/gray" />
 
                 </LinearLayout>
@@ -218,7 +232,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
                         android:text="Select Barangay"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="@color/gray" />
 
                 </LinearLayout>
@@ -258,7 +272,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
                         android:text="Select Date"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="@color/gray" />
 
                 </LinearLayout>

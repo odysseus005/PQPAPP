@@ -60,24 +60,34 @@ public class FunctionUtils {
         return date;
     }
 
-    public static long milliseconds(String date)
+    public static String convertStatus(String status)
     {
-        //String date_ = date;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try
-        {
-            Date mDate = sdf.parse(date);
-            long timeInMilliseconds = mDate.getTime();
-            System.out.println("Date in milli :: " + timeInMilliseconds);
-            return timeInMilliseconds;
-        }
-        catch (ParseException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
-        return 0;
+            String returnStats="";
+            switch (status)
+            {
+                case "P":
+                    returnStats = "Pending";
+                    break;
+                case "N":
+
+                    returnStats = "No Show";
+                    break;
+
+                case "S":
+                    returnStats = "Successful";
+
+                    break;
+
+                default:
+                    returnStats = "Pending";
+                    break;
+
+            }
+
+
+
+        return returnStats;
     }
 
 
