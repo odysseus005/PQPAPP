@@ -50,6 +50,7 @@ import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.util.FunctionUtils;
 
 
 public class AppointmentActivity
@@ -175,7 +176,7 @@ public class AppointmentActivity
                 false);
 
 
-
+        binding.txtDateToday.setText(FunctionUtils.convertDateToString("MMMM dd, yyyy", Calendar.getInstance()));
     }
 
     @NonNull
@@ -428,9 +429,9 @@ public class AppointmentActivity
         detailBinding.setAppointment(appointment);
 
 
-        detailBinding.detailTaxType.setText((presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
-        detailBinding.detailTransType.setText(presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
-        detailBinding.detailBarangay.setText((presenter.getBarangay(appointment.getAppointmentBaranagay())).getBarangayName());
+        detailBinding.detailTaxType.setText("Tax Type: "+(presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
+        detailBinding.detailTransType.setText("Transaction Type: "+presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
+        detailBinding.detailBarangay.setText("Barangay: "+(presenter.getBarangay(appointment.getAppointmentBaranagay())).getBarangayName());
 
 
 

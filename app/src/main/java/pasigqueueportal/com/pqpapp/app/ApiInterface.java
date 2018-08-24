@@ -12,6 +12,7 @@ import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -65,10 +66,12 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
-    @POST(Endpoints.UPDATEPASS)
-    Call<ResultResponse> changePassword(@Field(Constants.TAG) String tag,
-                                        @Field(Constants.USER_ID) String user_id,
-                                        @Field(Constants.PASSWORD) String password);
+    @PATCH(Endpoints.UPDATEPASS)
+    Call<ResultResponse> changePassword(@Header(Constants.ACCEPT) String json,
+                                        @Header(Constants.AUTHORIZATION) String authorization,
+                                        @Field(Constants.PASSWORD) String password,
+                                        @Field(Constants.NEW_PASSWORD) String newpass
+                                        );
 
     @FormUrlEncoded
     @PATCH(Endpoints.UPDATEUSER)
@@ -81,8 +84,11 @@ public interface ApiInterface {
                                  );
 
     @Multipart
-    @POST("upload.php?")
-    Call<ResultResponse> uploadFile(@Part MultipartBody.Part file, @Part("name") RequestBody name);
+    @POST(Endpoints.UPLOAD_PICTURE)
+    Call<ResultResponse> uploadFile(@Header(Constants.ACCEPT) String json,
+                                    @Header(Constants.AUTHORIZATION) String authorization,
+                                    @Part MultipartBody.Part image,
+                                    @Part(Constants.IMAGE) RequestBody name);
 
 
 

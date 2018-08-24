@@ -18,10 +18,13 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.app.Endpoints;
 import pasigqueueportal.com.pqpapp.databinding.ActivityProfileBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogChangePasswordBinding;
+import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.ui.profile.edit.EditProfileActivity;
 import pasigqueueportal.com.pqpapp.util.CircleTransform;
@@ -31,7 +34,8 @@ public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePr
 
     private ActivityProfileBinding binding;
     private Realm realm;
-    private User user;
+    private User user,user2;
+    private Token token;
     private ProgressDialog progressDialog;
     private Dialog dialog;
 
@@ -47,26 +51,43 @@ public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePr
 
         binding.toolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         binding.toolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+        user2 = realm.where(User.class).findFirst();
+        user = realm.where(User.class).findFirstAsync();
+        token = realm.where(Token.class).findFirst();
+        user.addChangeListener(new RealmChangeListener<RealmModel>() {
+            @Override
+            public void onChange(RealmModel element) {
+                if (user.isLoaded() && user.isValid()) {
 
-       user = realm.where(User.class).findFirst();
-       if(user!=null) {
-           // binding.setProfile(user);
-           String imageURL = "";
-           imageURL = Endpoints.URL_IMAGE + user.getImage();
-           Log.d("TAG", imageURL);
-           Glide.with(ProfileActivity.this)
-                   .load(imageURL)
-                   .transform(new CircleTransform(ProfileActivity.this))
-                   .diskCacheStrategy(DiskCacheStrategy.ALL)
-                   .error(R.drawable.placeholder_profile)
-                   .into(binding.layoutHeader.imageView);
+                    updateprofile();
 
-           getSupportActionBar().setTitle(user.getFullName());
-
-
-           binding.setProfile(user);
-           binding.setView(getMvpView());
        }
+            }
+        });
+        binding.setView(getMvpView());
+        updateprofile();
+    }
+
+
+    public void updateprofile()
+    {
+        user2 = realm.where(User.class).findFirst();
+        if(user2!=null) {
+            getSupportActionBar().setTitle(user2.getFirstname() + " " + user2.getLastname());
+            // binding.setProfile(user);
+            String imageURL = "";
+            imageURL = Endpoints.URL_IMAGE + user2.getImage();
+            Log.d("TAG", imageURL);
+            Glide.with(ProfileActivity.this)
+                    .load(imageURL)
+                    .transform(new CircleTransform(ProfileActivity.this))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(R.drawable.placeholder_profile)
+                    .into(binding.layoutHeader.imageView);
+
+
+            binding.setProfile(user2);
+        }
     }
 
     @Override
@@ -83,6 +104,7 @@ public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePr
                 return true;
             case R.id.action_edit_profile:
                 startActivity(new Intent(this, EditProfileActivity.class));
+                finish();
                 return true;
             case R.id.action_edit_password:
                onChangePasswordClicked();
@@ -146,8 +168,7 @@ public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePr
             @Override
             public void onClick(View v) {
 
-                Log.d(">>>>",user.getPassword());
-                presenter.changePassword(dialogBinding.etCurrPassword.getText().toString(),
+                presenter.changePassword(token.getToken(),dialogBinding.etCurrPassword.getText().toString(),
                         dialogBinding.etNewPassword.getText().toString(),
                         dialogBinding.etConfirmPass.getText().toString());
             }

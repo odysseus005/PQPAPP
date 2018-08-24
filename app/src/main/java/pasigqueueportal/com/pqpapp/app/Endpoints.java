@@ -6,7 +6,7 @@ public class Endpoints {
 
     public static final String _ID = "{id}/";
     public static final String BASE_URL = "http://queueportal.hostingerapp.com";
-    public static final String URL_IMAGE = BASE_URL+ "/images/";
+    public static final String URL_IMAGE = BASE_URL+"/uploads/";
     public static final String API_URL = BASE_URL+ "/api/";
     public static final String IMAGE_UPLOAD = BASE_URL + "/src/v1/";
 
@@ -17,8 +17,9 @@ public class Endpoints {
     public static final String TOKEN = "token/refresh";
     public static final String REGISTER = "register";
     public static final String GET_USER = "user";
+    public static final String UPLOAD_PICTURE = "user/upload";
     public static final String UPDATEUSER = "profile";
-    public static final String UPDATEPASS = "changepass";
+    public static final String UPDATEPASS = "changepassword";
     public static final String FORGOTPASS = "forgotPass";
     public static final String FIRSTLOGIN = "firstLogin";
 

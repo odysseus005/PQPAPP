@@ -75,6 +75,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(user != null)
+            updateUI();
+    }
+
+
 
     private void updateUI() {
 

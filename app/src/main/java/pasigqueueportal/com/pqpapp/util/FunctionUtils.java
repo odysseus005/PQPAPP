@@ -3,6 +3,7 @@ package pasigqueueportal.com.pqpapp.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -35,6 +36,15 @@ public class FunctionUtils {
 
 
         return date;
+    }
+
+    public static String convertDateToString(String format, Calendar calendar) {
+        if (calendar == null) return "";
+        return getSimpleDateFormat(format).format(calendar.getTime());
+    }
+
+    public static SimpleDateFormat getSimpleDateFormat(String format) {
+        return new SimpleDateFormat(format, Locale.ENGLISH);
     }
 
     public static String appointListTimestampYear(String date) {

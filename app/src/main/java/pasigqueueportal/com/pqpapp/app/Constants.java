@@ -11,6 +11,7 @@ public class Constants {
     public static final String TAG = "tag";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String NEW_PASSWORD = "new_password";
     public static final String TOKEN_REFRESH = "refresh_token";
     public static final String DATE = "date";
     public static final String AUTHORIZATION = "Authorization";
@@ -32,6 +33,7 @@ public class Constants {
     public static final String BIRTHDAY = "birthday";
     public static final String CONTACT = "contact_no";
     public static final String ADDRESS = "address";
+    public static final String IMAGE = "image";
 
 
     //Appointment

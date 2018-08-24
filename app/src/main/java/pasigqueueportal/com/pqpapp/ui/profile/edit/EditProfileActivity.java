@@ -46,6 +46,7 @@ import pasigqueueportal.com.pqpapp.app.Endpoints;
 import pasigqueueportal.com.pqpapp.databinding.ActivityEditProfileBinding;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.profile.ProfileActivity;
 import pasigqueueportal.com.pqpapp.util.CircleTransform;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -152,8 +153,10 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
 
     @Override
     public void finishAct() {
-        finish();
+
         showAlert("Profile Updated");
+        startActivity(new Intent(this, ProfileActivity.class));
+        finish();
     }
 
     @Override
@@ -307,7 +310,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
                 .setPositiveButton("UPLOAD", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        presenter.upload(user.getEmail()+".jpg",imageFile);
+                        presenter.upload(token.getToken(),imageFile,user.getContact()+".jpeg");
                     }
                 })
                 .setNegativeButton("CANCEL", null)
