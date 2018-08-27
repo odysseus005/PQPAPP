@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <data>
+
+
+        <variable
+            name="view"
+            type="pasigqueueportal.com.pqpapp.ui.main.currentAppointment.AppointmentView" />
+
+
+
+        <variable
+            name="contentVisible"
+            type="boolean" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="400dp"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:tint="@color/white"
+                android:src="@drawable/ic_appointment_info"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Appointment Reminders"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.  Keep your location services on to track your ETA."
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2.  Actual transaction time may vary depending on the volume preceding transactions."
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3.  A text message will be send t oyour cellphone number 15 minutes before estimated call time."
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.  Refer to the real-time queue transactions at the homepage to be updated."
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.  Failure to appear will forfeit the queue number.."
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6.  Present the electronic queue number to the frontliner or cashier."
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    />
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:minWidth="300dp"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+
+                    <TextView
+                        android:id="@+id/cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/rounded_button_solid"
+                        android:clickable="true"
+                        android:gravity="center|right"
+                        android:padding="8dp"
+                        android:paddingEnd="20dp"
+                        android:paddingRight="25dp"
+                        android:paddingStart="20dp"
+                        android:text="Close"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

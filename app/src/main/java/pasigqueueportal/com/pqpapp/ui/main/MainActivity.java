@@ -130,7 +130,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(this, ProfileActivity.class));
         }
         else if (id == R.id.nav_location) {
-            startActivity(new Intent(this, MapActivity.class));
+           // startActivity(new Intent(this, MapActivity.class));
+            Intent i = new Intent(this, MapActivity.class);
+            i.putExtra("time", "");
+            startActivity(i);
         }
         else if (id == R.id.nav_logout) {
             logOut(user);

@@ -15,15 +15,7 @@
 
 
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:weightSum="1"
-            />
+
 
 
         <LinearLayout
@@ -39,12 +31,12 @@
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
             android:layout_gravity="center"
             android:layout_above="@+id/textUsername"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_launcher_background"
+            android:background="@drawable/pqp_logo"
             />
 
         <!-- Login progress -->

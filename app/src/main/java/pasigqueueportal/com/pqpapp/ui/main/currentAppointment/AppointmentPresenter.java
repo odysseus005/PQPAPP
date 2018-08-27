@@ -326,7 +326,9 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         public void onError(Throwable error) {
                             realm.close();
                           //  Log.e(TAG, "onError: Unable to save USER", error);
-                            getView().showError("Error Loading Data Please Restart App");
+                            getView().showError("Session Expired");
+                            if(response.body().getMessage().contains("refresh token is invalid"))
+                                getView().logOut();
                         }
                     });
 

@@ -37,6 +37,7 @@ public interface AppointmentView extends MvpView {
 
     void stopLoading();
 
+    void logOut();
 
     void closeDialog(String message);
 

@@ -61,7 +61,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
            holder.itemAppointmentBinding.setView(view);
 
 
-        Log.d(">>>>>",(getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
+    //    Log.d(">>>>>",(getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
            holder.itemAppointmentBinding.appointListTaxType.setText((getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
            holder.itemAppointmentBinding.appointListTransType.setText(getTransactionType(Integer.parseInt(appointment.get(position).getAppointmentTransType())));
            holder.itemAppointmentBinding.appointListDate.setText(FunctionUtils.appointListTimestampMonDate(appointment.get(position).getAppointmentTransDate()));

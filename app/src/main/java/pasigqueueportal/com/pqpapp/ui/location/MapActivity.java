@@ -53,7 +53,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -87,6 +91,8 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     private String distance,eta;
     LocationManager locationManager;
     private User user;
+    private boolean timeChecker=false;
+    private String getTime;
     static final Integer CALL = 0x2;
 
     @Override
@@ -95,6 +101,12 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         binding.setView(getMvpView());
         realm = Realm.getDefaultInstance();
+
+
+        Intent intent = getIntent();
+        getTime = intent.getExtras().getString("time");
+        if(!(getTime.equals("")))
+            timeChecker=true;
 
 
         user = realm.where(User.class).findFirst();
@@ -570,6 +582,39 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
 
             binding.dealerDistance.setText("Total Distance: "+distance);
             binding.dealerEta.setText("Esimated Travel Time: "+eta);
+            try {
+            if(timeChecker) {
+
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date d1 = null;
+
+                d1 = df.parse(getTime);
+
+
+
+           Log.d("TAG>>>>2",""+FunctionUtils.minusMinutesToDate(Integer.parseInt(durationInfo.getValue())/60,d1));
+
+           Date calculatedEDT = FunctionUtils.minusMinutesToDate(Integer.parseInt(durationInfo.getValue())/60,d1);
+
+
+                binding.dealerSuggest.setVisibility(View.VISIBLE);
+                binding.dealerCall.setVisibility(View.VISIBLE);
+
+                binding.dealerCall.setText("Call Time: "+FunctionUtils.Dateto12hour(getTime));
+                binding.dealerSuggest.setText("Estimated Departure Time: "+ FunctionUtils.getNotesIndexByTime(calculatedEDT));
+
+
+            }else{
+                binding.dealerSuggest.setVisibility(View.GONE);
+                binding.dealerCall.setVisibility(View.GONE);}
+            } catch (ParseException e) {
+                e.printStackTrace();
+                binding.dealerSuggest.setVisibility(View.GONE);
+                binding.dealerCall.setVisibility(View.GONE);
+                showAlert("Error Calculating Suggested Time");
+            }
+
     }
     }
 

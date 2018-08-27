@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PQPAPP</string>
+    <string name="app_name">Pasig Queue Portal</string>
 
     <!--changepass -->
     <string name="change_password_dialog">Enter your username below and we\'ll send your password!</string>

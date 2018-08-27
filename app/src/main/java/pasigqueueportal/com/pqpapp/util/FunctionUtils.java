@@ -38,6 +38,22 @@ public class FunctionUtils {
         return date;
     }
 
+    public static Date minusMinutesToDate(int minutes, Date beforeTime){
+        final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+
+        long curTimeInMs = beforeTime.getTime();
+        Date afterAddingMins = new Date(curTimeInMs - (minutes * ONE_MINUTE_IN_MILLIS));
+        return afterAddingMins;
+    }
+
+    public static String getNotesIndexByTime(Date aDate){
+        int ret = 0;
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("hh:mm a");
+        String sTime = localDateFormat.format(aDate);
+        return new SimpleDateFormat("hh:mm a").format(aDate);
+
+    }
+
     public static String convertDateToString(String format, Calendar calendar) {
         if (calendar == null) return "";
         return getSimpleDateFormat(format).format(calendar.getTime());
@@ -124,6 +140,19 @@ public class FunctionUtils {
     {
         try {
             final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            final Date dateObj = sdf.parse(time);
+            //DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+            return new SimpleDateFormat("hh:mm a").format(dateObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "error";
+    }
+
+    public static String Dateto12hour(String time)
+    {
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             final Date dateObj = sdf.parse(time);
             //DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
             return new SimpleDateFormat("hh:mm a").format(dateObj);

@@ -3,6 +3,7 @@ package pasigqueueportal.com.pqpapp.ui.main.currentAppointment;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,11 +46,15 @@ import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityAppointmentCurrentBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAddAppointmentBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentRemindersBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.location.MapActivity;
+import pasigqueueportal.com.pqpapp.ui.login.LoginActivity;
+import pasigqueueportal.com.pqpapp.ui.main.MainActivity;
 import pasigqueueportal.com.pqpapp.util.FunctionUtils;
 
 
@@ -73,7 +78,8 @@ public class AppointmentActivity
     private UnpaidAdapter unpaidAdapter;
     private DialogAddAppointmentBinding dialogBinding;
     private DialogAppointmentDetailBinding detailBinding;
-    private Dialog dialog,dialogDetail;
+    private DialogAppointmentRemindersBinding reminderBinding;
+    private Dialog dialog,dialogDetail,dialogDetailReminder;
     private Token token;
     private  String selectedBaranagay="",selectedTaxtype="",selectedDate="";
     public AppointmentActivity(){
@@ -376,9 +382,10 @@ public class AppointmentActivity
     {
         token = realm.where(Token.class).findFirst();
 
-        presenter.loadAppointmentList(token.getToken());
+
         presenter.loadBarangay(token.getToken());
         presenter.loadTaxType(token.getToken());
+        presenter.loadAppointmentList(token.getToken());
     }
 
 
@@ -461,13 +468,23 @@ public class AppointmentActivity
             }
         });
 
-//        detailBinding.resched.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//
-//            }
-//        });
+        detailBinding.detailMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+             Intent i = new Intent(getContext(), MapActivity.class);
+                i.putExtra("time", appointment.getAppointmentTransDate()+" "+appointment.getAppointmentTransTime());
+                startActivity(i);
+            }
+        });
+
+        detailBinding.reminders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showReminder();
+            }
+        });
 
         detailBinding.close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -548,6 +565,38 @@ public class AppointmentActivity
 
     }
 
+
+    public void showReminder()
+    {
+
+
+
+        dialogDetailReminder = new Dialog(getContext(),R.style.RaffleDialogTheme);
+
+        dialogDetailReminder.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        reminderBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_appointment_reminders,
+                null,
+                false);
+
+
+        reminderBinding.setView(getMvpView());
+
+
+        reminderBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDetailReminder.dismiss();
+            }
+        });
+
+        dialogDetailReminder.setContentView(reminderBinding.getRoot());
+        dialogDetailReminder.setCancelable(true);
+        dialogDetailReminder.show();
+
+    }
 
 
 
@@ -687,7 +736,32 @@ public class AppointmentActivity
 
 
     }
+    @Override
+    public void logOut() {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                realm.close();
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                error.printStackTrace();
+                realm.close();
+                Toast.makeText(getContext(), "Realm Error", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+    }
 
 
 

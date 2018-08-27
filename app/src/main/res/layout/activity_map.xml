@@ -261,6 +261,30 @@
                                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                                 android:textStyle="bold" />
 
+                            <TextView
+                                android:id="@+id/dealerSuggest"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="30dp"
+                                android:layout_marginTop="4dp"
+                                android:visibility="gone"
+                                android:text="Estimated Departure Time : 4:00am"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/dealerCall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="30dp"
+                                android:layout_marginTop="4dp"
+                                android:visibility="gone"
+                                android:text="Call Time : 4:00am"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textStyle="bold" />
+
 
 
 

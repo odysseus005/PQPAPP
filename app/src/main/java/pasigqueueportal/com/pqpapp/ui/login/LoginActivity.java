@@ -57,8 +57,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         binding.setView(getMvpView());
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle("Chevrolet App");
+
 
 
 
