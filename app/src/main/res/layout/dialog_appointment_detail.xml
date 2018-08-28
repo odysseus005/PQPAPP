@@ -51,6 +51,16 @@
                         android:paddingRight="8dp"
                         android:paddingTop="8dp">
 
+                        <TextView
+                            android:id="@+id/text_success"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            android:text="Reserving Appointment Succesful"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+
 
                         <TextView
                             android:id="@+id/txt_email"
@@ -98,7 +108,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:gravity="center"
-                            android:text="Assessment: Window 1"
+                            android:text='@{"Assessment: "+appointment.assessmentWindow.paymentDesc}'
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -110,7 +120,7 @@
                             android:layout_marginTop="2dp"
                             android:gravity="center"
                             android:textColor="@color/white"
-                            android:text="Payment: Window 2"
+                            android:text='@{"Payment: "+appointment.paymentWindow.paymentDesc}'
                             android:textStyle="bold"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -288,6 +298,74 @@
 
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginLeft="3dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/gray"
+                            android:src="@drawable/ic_appointment_window"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Window Details"
+                            android:layout_marginLeft="0dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{"Assessment: "+appointment.assessmentWindow.paymentDesc}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{"Frontliner: "+appointment.assessmentWindow.assignedUser.fullName}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{"Payment: "+appointment.paymentWindow.paymentDesc}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:text='@{"Cashier: "+appointment.paymentWindow.assignedUser.fullName}'
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        />
+
+
+
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -336,7 +414,6 @@
                         android:clickable="true"
                         android:gravity="center"
                         android:padding="8dp"
-                        android:visibility="gone"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
                         android:text="Cancel Appointment"
@@ -344,7 +421,8 @@
                         android:paddingRight="25dp"
                         android:textColor="@color/white"
                         android:textSize="10sp"
-                        android:layout_below="@+id/LinearMoTo" />
+                         />
+
 
 
                     <TextView
@@ -365,7 +443,7 @@
                         android:paddingRight="25dp"
                         android:textColor="@color/white"
                         android:textSize="10sp"
-                        android:layout_below="@+id/LinearMoTo" />
+                       />
                     </LinearLayout>
 
                     <TextView

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -55,16 +56,58 @@ public class UnpaidAdapter extends RecyclerView.Adapter<UnpaidAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(UnpaidAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final UnpaidAdapter.ViewHolder holder, final int position) {
 
 
 
-           holder.itemAppointmentBinding.setAppointment(appointment.get(position));
+        holder.itemAppointmentBinding.unpaidListCardview.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+
+                if(chooseAssessment == position)
+                {
+                    chooseAssessment =  -1;
+                    holder.itemAppointmentBinding.unpaidListCardview.setCardBackgroundColor(Color.WHITE);
+                }else
+                {
+                    chooseAssessment = position;
+                    holder.itemAppointmentBinding.unpaidListCardview.setCardBackgroundColor(Color.parseColor("#26007a60"));
+                    notifyDataSetChanged();
+                }
+
+
+            }
+        });
+
+
+        checkClickStatus(position,holder);
+
+
+        holder.itemAppointmentBinding.setAppointment(appointment.get(position));
            holder.itemAppointmentBinding.setView(view);
 
 
-           holder.itemAppointmentBinding.appointListTaxType.setText((getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
-           holder.itemAppointmentBinding.appointListTransType.setText(getTransactionType(Integer.parseInt(appointment.get(position).getAppointmentTransType())));
+           holder.itemAppointmentBinding.appointListTaxType.setText("Tax Type: "+(getTaxType(appointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
+         holder.itemAppointmentBinding.appointListDate.setText(FunctionUtils.appointListTimestampMonDate(appointment.get(position).getAppointmentTransDate()));
+         holder.itemAppointmentBinding.appointListYear.setText(FunctionUtils.appointListTimestampYear(appointment.get(position).getAppointmentTransDate()));
+
+
+
+
+
+    }
+    public void checkClickStatus(int position,UnpaidAdapter.ViewHolder holder)
+    {
+
+        if(chooseAssessment != position)
+        {
+            holder.itemAppointmentBinding.unpaidListCardview.setCardBackgroundColor(Color.WHITE);
+        }else
+        {
+            holder.itemAppointmentBinding.unpaidListCardview.setCardBackgroundColor(Color.parseColor("#26007a60"));
+        }
+
 
 
     }
@@ -115,7 +158,7 @@ public class UnpaidAdapter extends RecyclerView.Adapter<UnpaidAdapter.ViewHolder
     public String getTransactionType(int id)
     {
 
-        if(id==0)
+        if(id==1)
             return "Assessment and Payment";
         else
             return "Payment";

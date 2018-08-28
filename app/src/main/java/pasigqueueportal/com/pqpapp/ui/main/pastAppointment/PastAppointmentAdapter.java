@@ -96,6 +96,10 @@ public class PastAppointmentAdapter extends RecyclerView.Adapter<PastAppointment
                 returnColor = Color.parseColor("#9ccc65");
 
                 break;
+            case "C":
+
+                returnColor = Color.parseColor("#b95d5d");
+                break;
 
             default:
                 returnColor = Color.parseColor("#9ccc65");

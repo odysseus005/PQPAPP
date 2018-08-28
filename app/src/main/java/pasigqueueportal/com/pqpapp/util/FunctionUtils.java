@@ -105,6 +105,16 @@ public class FunctionUtils {
 
                     break;
 
+                case "C":
+                    returnStats = "Cancelled";
+
+                    break;
+
+                case "U":
+                    returnStats = "Unpaid";
+
+                    break;
+
                 default:
                     returnStats = "Pending";
                     break;

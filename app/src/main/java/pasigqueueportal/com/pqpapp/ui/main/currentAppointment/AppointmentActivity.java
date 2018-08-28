@@ -81,6 +81,7 @@ public class AppointmentActivity
     private DialogAppointmentRemindersBinding reminderBinding;
     private Dialog dialog,dialogDetail,dialogDetailReminder;
     private Token token;
+    private boolean reserveChecker=false;
     private  String selectedBaranagay="",selectedTaxtype="",selectedDate="";
     public AppointmentActivity(){
 
@@ -401,13 +402,16 @@ public class AppointmentActivity
 
 
     @Override
-    public void showReturn(String message) {
+    public void showReturn(String message,Appointment appointment) {
 
         presenter.loadAppointmentList(token.getToken());
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         selectedBaranagay="";selectedTaxtype="";selectedDate="";
         assesTypeAdapter.reset();
         dialog.dismiss();
+
+        reserveChecker=true;
+        showAppointmentDetails(appointment);
 
     }
 
@@ -435,6 +439,8 @@ public class AppointmentActivity
         detailBinding.setView(getMvpView());
         detailBinding.setAppointment(appointment);
 
+        if(reserveChecker)
+                detailBinding.textSuccess.setVisibility(View.VISIBLE);
 
         detailBinding.detailTaxType.setText("Tax Type: "+(presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
         detailBinding.detailTransType.setText("Transaction Type: "+presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
@@ -490,6 +496,7 @@ public class AppointmentActivity
             @Override
             public void onClick(View v) {
                 dialogDetail.dismiss();
+                reserveChecker=false;
             }
         });
 
@@ -664,6 +671,7 @@ public class AppointmentActivity
                 dialog.dismiss();
                 assesTypeAdapter.reset();
                 selectedBaranagay="";selectedTaxtype="";selectedDate="";
+                hideAssessTypeAdapter();
             }
         });
 
@@ -674,10 +682,10 @@ public class AppointmentActivity
                 if(assesTypeAdapter.getSelected().equals(""))
                 {
                     showError("Please Select Transacion");
-                }else if(selectedTaxtype.equals(""))
+                }else if(selectedTaxtype.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
                     showError("Please Select Tax Type");
-                }else if(selectedDate.equals(""))
+                }else if(selectedDate.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
                     showError("Please Select Date");
                 }else if(selectedBaranagay.equals(""))
@@ -686,10 +694,11 @@ public class AppointmentActivity
                 }
                 else {
 
-                    if(assesTypeAdapter.getSelected().equals("0"))
+                    if(assesTypeAdapter.getSelected().equals("1"))
                     presenter.assessmentAppointment(assesTypeAdapter.getSelected(), selectedTaxtype, selectedDate, selectedBaranagay, token.getToken());
-                   else if(assesTypeAdapter.getSelected().equals("1")) {
+                   else if(assesTypeAdapter.getSelected().equals("2")) {
                         if(unpaidAdapter.getSelected().equals("true")) {
+
                             Appointment appointment = unpaidAdapter.getValue();
                             presenter.paymentAppointment(assesTypeAdapter.getSelected(), appointment.getAppointmentTaxType(), selectedDate, appointment.getAppointmentBaranagay(), token.getToken(),appointment.getAppointmentId());
                         }
@@ -723,6 +732,11 @@ public class AppointmentActivity
         }
     }
 
+    public void  hideAssessTypeAdapter()
+    {
+        dialogBinding.taxAssess.setVisibility(View.GONE);
+        dialogBinding.taxPayment.setVisibility(View.GONE);
+    }
 
 
 

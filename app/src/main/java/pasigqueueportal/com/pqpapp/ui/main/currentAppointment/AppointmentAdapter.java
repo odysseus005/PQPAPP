@@ -89,6 +89,11 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
                 break;
 
+            case "C":
+
+                returnColor = Color.parseColor("#b95d5d");
+                break;
+
             default:
                 returnColor = Color.parseColor("#9ccc65");
                 break;
@@ -128,7 +133,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     public String getTransactionType(int id)
     {
 
-        if(id==0)
+        if(id==1)
             return "Assessment and Payment";
         else
             return "Payment";

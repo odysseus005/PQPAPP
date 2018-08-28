@@ -31,7 +31,7 @@ public interface AppointmentView extends MvpView {
 
     void showError(String message);
 
-    void showReturn(String message);
+    void showReturn(String message, Appointment appoint);
 
     void startLoading();
 

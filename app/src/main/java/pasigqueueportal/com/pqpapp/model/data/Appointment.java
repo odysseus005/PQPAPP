@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -34,6 +35,32 @@ public class Appointment extends RealmObject {
     private String appointmentTransStatus;
     @SerializedName("queue_no")
     private String appointmentTransQueue;
+
+
+
+    @SerializedName("payment_window")
+    private Window paymentWindow;
+
+
+    @SerializedName("assessment_window")
+    private Window assessmentWindow;
+
+
+    public Window getPaymentWindow() {
+        return paymentWindow;
+    }
+
+    public void setPaymentWindow(Window paymentWindow) {
+        this.paymentWindow = paymentWindow;
+    }
+
+    public Window getAssessmentWindow() {
+        return assessmentWindow;
+    }
+
+    public void setAssessmentWindow(Window assessmentWindow) {
+        this.assessmentWindow = assessmentWindow;
+    }
 
     public String getAppointmentTransDate() {
         return appointmentTransDate;

@@ -214,7 +214,7 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                             @Override
                             public void onSuccess() {
                                 realm.close();
-                                getView().showReturn("Appointment Successful");
+                                getView().showReturn("Appointment Successful",response.body().getAppointment());
 
                             }
                         }, new Realm.Transaction.OnError() {
@@ -267,7 +267,8 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         @Override
                         public void onSuccess() {
                             realm.close();
-                            getView().showReturn("Appointment Successful");
+                            getView().showReturn("Appointment Successful",response.body().getAppointment());
+
 
                         }
                     }, new Realm.Transaction.OnError() {
@@ -356,7 +357,7 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
     public String getTransactionType(int id)
     {
 
-        if(id==0)
+        if(id==1)
             return "Assessment and Payment";
         else
             return "Payment";

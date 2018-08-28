@@ -30,7 +30,7 @@ public class AssesTypeAdapter extends RecyclerView.Adapter<AssesTypeAdapter.View
         this.view = view;
         assess = new ArrayList<>();
         chooseAssessment = -1;
-        reloadImage = true;
+
 
     }
 
@@ -64,7 +64,7 @@ public class AssesTypeAdapter extends RecyclerView.Adapter<AssesTypeAdapter.View
         holder.itemAssessmentBinding.appointmentAssessment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                reloadImage = false;
+
 
 
                if(chooseAssessment == position)
@@ -108,6 +108,7 @@ public class AssesTypeAdapter extends RecyclerView.Adapter<AssesTypeAdapter.View
     public void reset()
     {
         chooseAssessment = -1;
+
     }
 
 
@@ -127,7 +128,7 @@ public class AssesTypeAdapter extends RecyclerView.Adapter<AssesTypeAdapter.View
     {
         if(chooseAssessment==-1)
             return "";
-        return String.valueOf(chooseAssessment);
+        return String.valueOf(chooseAssessment+1);
     }
 
 
