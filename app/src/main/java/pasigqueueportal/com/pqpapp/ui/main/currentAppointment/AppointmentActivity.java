@@ -589,7 +589,7 @@ public class AppointmentActivity
                 false);
 
 
-        reminderBinding.setView(getMvpView());
+
 
 
         reminderBinding.cancel.setOnClickListener(new View.OnClickListener() {

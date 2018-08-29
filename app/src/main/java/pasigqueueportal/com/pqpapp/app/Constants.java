@@ -43,6 +43,11 @@ public class Constants {
     public static final String BARANGAY_ID = "barangay_id";
     public static final String QUEUE_ID = "queue_id";
 
+    //Feedback
+    public static final String EMPLOYEE_ID="employee_id";
+    public static final String APPOINTMENT_ID="queue_process_id";
+    public static final String RATING="rating";
+
 
 
 }

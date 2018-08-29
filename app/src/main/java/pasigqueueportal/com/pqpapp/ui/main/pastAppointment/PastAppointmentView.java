@@ -2,7 +2,7 @@ package pasigqueueportal.com.pqpapp.ui.main.pastAppointment;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-import pasigqueueportal.com.pqpapp.model.data.PastAppointment;
+import pasigqueueportal.com.pqpapp.model.data.Appointment;
 
 
 public interface PastAppointmentView extends MvpView {
@@ -13,7 +13,7 @@ public interface PastAppointmentView extends MvpView {
     void setAppointmentList();
 
 
-    void showAppointmentDetails2(PastAppointment appoint);
+    void showAppointmentDetails(Appointment appoint);
 
     void stopRefresh();
 

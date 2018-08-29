@@ -10,6 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary= true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -51,4 +52,5 @@ dependencies {
     implementation 'com.akexorcist:googledirectionlibrary:1.1.1'
     implementation 'com.wdullaer:materialdatetimepicker:3.5.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
 }

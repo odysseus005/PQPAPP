@@ -2,6 +2,7 @@ package pasigqueueportal.com.pqpapp.ui.main.pastAppointment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,16 +22,23 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityAppointmentPastBinding;
-import pasigqueueportal.com.pqpapp.model.data.PastAppointment;
+import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailPastBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentRemindersBinding;
+import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.location.MapActivity;
 
 
 public class PastAppointmentActivity
@@ -42,12 +50,13 @@ public class PastAppointmentActivity
     private ActivityAppointmentPastBinding binding;
     private Realm realm;
     private User user;
-    private RealmResults<PastAppointment> appointmentlmResults;
+    private RealmResults<Appointment> appointmentlmResults;
     private String searchText;
     public String id;
     private PastAppointmentAdapter appointmentListAdapter;
-    private Dialog dialogDetail;
-
+    private Dialog dialogDetail,dialogDetailReminder;
+    private DialogAppointmentDetailPastBinding detailBinding;
+    private DialogAppointmentRemindersBinding reminderBinding;
 
 
     public PastAppointmentActivity(){
@@ -111,7 +120,7 @@ public class PastAppointmentActivity
         presenter.onStart();
 
 
-        appointmentListAdapter = new PastAppointmentAdapter(getActivity(), getMvpView());
+        appointmentListAdapter = new PastAppointmentAdapter(getActivity(), getMvpView(),realm);
         binding.recyclerView.setAdapter(appointmentListAdapter);
 
 
@@ -277,13 +286,15 @@ public class PastAppointmentActivity
 
 
 
-
-
-        appointmentlmResults = realm.where(PastAppointment.class).findAllAsync();
+        Date c = Calendar.getInstance().getTime();
+        appointmentlmResults = realm.where(Appointment.class).findAll();
         appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
-// \               .lessThan("dateMs",System.currentTimeMillis())
+                .lessThan("appointmentTimestamp",c )
                 .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+
         appointmentListAdapter.notifyDataSetChanged();
+
+
 
 
 
@@ -324,18 +335,142 @@ public class PastAppointmentActivity
 
 
     @Override
-    public void showAppointmentDetails2(PastAppointment appoint) {
+    public void showAppointmentDetails(Appointment appointment) {
 
+
+
+
+
+        dialogDetail = new Dialog(getContext(),R.style.RaffleDialogTheme);
+
+        dialogDetail.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        detailBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_appointment_detail_past,
+                null,
+                false);
+
+
+        detailBinding.setView(getMvpView());
+        detailBinding.setAppointment(appointment);
+
+
+
+        detailBinding.detailTaxType.setText("Tax Type: "+(presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
+        detailBinding.detailTransType.setText("Transaction Type: "+presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
+        detailBinding.detailBarangay.setText("Barangay: "+(presenter.getBarangay(appointment.getAppointmentBaranagay())).getBarangayName());
+
+
+
+        detailBinding.appointmentDetailsStatus.setTextColor(appointmentListAdapter.getStatusColor(appointment.getAppointmentTransStatus()));
+
+        detailBinding.feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                new AppRatingDialog.Builder()
+//                        .setPositiveButtonText("Submit")
+//                        .setNegativeButtonText("Cancel")
+//                        .setNeutralButtonText("Later")
+//                        .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+//                        .setDefaultRating(2)
+//                        .setTitle("Rate this application")
+//                        .setDescription("Please select some stars and give your feedback")
+//                        .setCommentInputEnabled(true)
+//                        .setDefaultComment("This app is pretty cool !")
+//                        .setStarColor(R.color.colorPrimary)
+//                        .setNoteDescriptionTextColor(R.color.colorPrimaryDark)
+//                        .setTitleTextColor(R.color.black)
+//                        .setDescriptionTextColor(R.color.gray)
+//                        .setHint("Please write your comment here ...")
+//                       // .setHintTextColor(R.color.hintTextColor)
+//                        .setCommentTextColor(R.color.white)
+//                        .setCommentBackgroundColor(R.color.colorPrimaryDark)
+//                        .setWindowAnimation(R.style.MyDialogFadeAnimation)
+//                        .setCancelable(false)
+//                        .setCanceledOnTouchOutside(false)
+//                        .create(getActivity())
+//                     //   .setTargetFragment(this, TAG) // only if listener is implemented by fragment
+//                        .show();
 //
+           }
+        });
+
+
+
+        detailBinding.reminders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showReminder();
+            }
+        });
+
+        detailBinding.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDetail.dismiss();
+
+            }
+        });
+
+        dialogDetail.setContentView(detailBinding.getRoot());
+        dialogDetail.setCancelable(true);
+        dialogDetail.show();
+
 
     }
 
 
 
+    public void showReminder()
+    {
+
+
+
+        dialogDetailReminder = new Dialog(getContext(),R.style.RaffleDialogTheme);
+
+        dialogDetailReminder.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        reminderBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_appointment_reminders,
+                null,
+                false);
 
 
 
 
+
+        reminderBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDetailReminder.dismiss();
+            }
+        });
+
+        dialogDetailReminder.setContentView(reminderBinding.getRoot());
+        dialogDetailReminder.setCancelable(true);
+        dialogDetailReminder.show();
+
+    }
+
+
+//    @Override
+//    public void onPositiveButtonClicked(int rate, String comment) {
+//        // interpret results, send it to analytics etc...
+//    }
+//
+//    @Override
+//    public void onNegativeButtonClicked() {
+//
+//    }
+//
+//    @Override
+//    public void onNeutralButtonClicked() {
+//
+//    }
 
 
 

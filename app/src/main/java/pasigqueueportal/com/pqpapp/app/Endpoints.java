@@ -30,4 +30,7 @@ public class Endpoints {
     public static final String GET_BARANGAY = "barangay";
     public static final String APPOINTMENT = "queue";
 
+    //Feedback
+    public static final String FEEDBACK = "feedback";
+
 }

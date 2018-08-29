@@ -6,11 +6,7 @@
     <data>
 
 
-        <variable
-            name="view"
-            type="pasigqueueportal.com.pqpapp.ui.main.currentAppointment.AppointmentView" />
-
-
+       
 
         <variable
             name="contentVisible"

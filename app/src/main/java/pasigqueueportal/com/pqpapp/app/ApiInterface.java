@@ -8,6 +8,7 @@ import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
 import pasigqueueportal.com.pqpapp.model.response.BarangayResponse;
+import pasigqueueportal.com.pqpapp.model.response.FeedbackResponse;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
@@ -132,6 +133,22 @@ public interface ApiInterface {
 
     @GET(Endpoints.GET_BARANGAY)
     Call<BarangayResponse>getBarangay(@Header(Constants.ACCEPT) String json,
+                                      @Header(Constants.AUTHORIZATION) String authorization
+
+    );
+
+    //Feedback
+    @FormUrlEncoded
+    @POST(Endpoints.FEEDBACK)
+    Call<ResultResponse>sendFeedback( @Header(Constants.ACCEPT) String json,
+                                           @Header(Constants.AUTHORIZATION) String authorization,
+                                           @Field(Constants.EMPLOYEE_ID) String employee_id,
+                                           @Field(Constants.APPOINTMENT_ID) String queueid,
+                                           @Field(Constants.RATING) String rating,
+                                           @Field(Constants.MESSAGE) String message);
+
+    @GET(Endpoints.FEEDBACK)
+    Call<FeedbackResponse>getFeedback(@Header(Constants.ACCEPT) String json,
                                       @Header(Constants.AUTHORIZATION) String authorization
 
     );
