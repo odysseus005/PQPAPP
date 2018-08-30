@@ -30,6 +30,20 @@ public class AssignUser extends RealmObject {
     private String assignImage;
 
 
+
+    @SerializedName("type_text")
+    @Expose
+    private String assignPosition;
+
+
+    public String getAssignPosition() {
+        return assignPosition;
+    }
+
+    public void setAssignPosition(String assignPosition) {
+        this.assignPosition = assignPosition;
+    }
+
     public int getAssignId() {
         return assignId;
     }

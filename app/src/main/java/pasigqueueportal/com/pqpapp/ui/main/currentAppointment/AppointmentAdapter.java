@@ -69,6 +69,8 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
            holder.itemAppointmentBinding.appointListTime.setText(FunctionUtils.hour24to12hour(appointment.get(position).getAppointmentTransTime()));
            holder.itemAppointmentBinding.appointmentStatusColor.setBackgroundColor(getStatusColor(appointment.get(position).getAppointmentTransStatus()));
 
+
+
     }
 
     public int getStatusColor(String status)
@@ -88,15 +90,15 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
                 returnColor = Color.parseColor("#9ccc65");
 
                 break;
-
             case "C":
 
-                returnColor = Color.parseColor("#b95d5d");
+                returnColor = Color.parseColor("#e29191");
                 break;
 
             default:
                 returnColor = Color.parseColor("#9ccc65");
                 break;
+
 
         }
 

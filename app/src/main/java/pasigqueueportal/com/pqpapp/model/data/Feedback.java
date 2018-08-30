@@ -15,7 +15,7 @@ public class Feedback extends RealmObject {
     private String feedbackId;
 
 
-    @SerializedName("rate")
+    @SerializedName("rating")
     @Expose
     private String feedbackRate;
 
@@ -24,6 +24,33 @@ public class Feedback extends RealmObject {
     @Expose
     private String feedbackMessage;
 
+
+
+    @SerializedName("created_at")
+    @Expose
+    private String feedbackCreated;
+
+
+    @SerializedName("employee")
+    private AssignUser feedbackEmployee;
+
+
+
+    public String getFeedbackCreated() {
+        return feedbackCreated;
+    }
+
+    public void setFeedbackCreated(String feedbackCreated) {
+        this.feedbackCreated = feedbackCreated;
+    }
+
+    public AssignUser getFeedbackEmployee() {
+        return feedbackEmployee;
+    }
+
+    public void setFeedbackEmployee(AssignUser feedbackEmployee) {
+        this.feedbackEmployee = feedbackEmployee;
+    }
 
     public String getFeedbackId() {
         return feedbackId;

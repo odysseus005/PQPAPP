@@ -25,6 +25,7 @@ public class Endpoints {
 
 
     //Appointment
+    public static final String CANCEL_APPOINT = "queue/{id}/cancel";
     public static final String GET_APPOINT = "user/queue";
     public static final String GET_TAXTYPE = "taxtypes";
     public static final String GET_BARANGAY = "barangay";

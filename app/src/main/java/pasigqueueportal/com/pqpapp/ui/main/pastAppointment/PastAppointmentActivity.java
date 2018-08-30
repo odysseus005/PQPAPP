@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
@@ -31,12 +32,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmModel;
 import io.realm.RealmResults;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityAppointmentPastBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogAddFeedbackBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailPastBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentRemindersBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
+import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.ui.location.MapActivity;
 
@@ -50,13 +54,15 @@ public class PastAppointmentActivity
     private ActivityAppointmentPastBinding binding;
     private Realm realm;
     private User user;
+    private Token token;
     private RealmResults<Appointment> appointmentlmResults;
     private String searchText;
     public String id;
     private PastAppointmentAdapter appointmentListAdapter;
-    private Dialog dialogDetail,dialogDetailReminder;
+    private Dialog dialogDetail,dialogDetailReminder,dialogfeedback;
     private DialogAppointmentDetailPastBinding detailBinding;
     private DialogAppointmentRemindersBinding reminderBinding;
+    private DialogAddFeedbackBinding feedbackBinding;
 
 
     public PastAppointmentActivity(){
@@ -109,7 +115,7 @@ public class PastAppointmentActivity
 
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-
+        token = realm.where(Token.class).findFirst();
         if (user == null) {
             Log.d(TAG, "No User found");
             //  finish();
@@ -214,7 +220,9 @@ public class PastAppointmentActivity
     public void onResume() {
         super.onResume();
 
-        presenter.loadAppointmentList(String.valueOf(user.getUserId()));
+       // presenter.loadAppointmentList(token.getToken());
+
+        setAppointmentList();
 
 
     }
@@ -232,7 +240,8 @@ public class PastAppointmentActivity
     @Override
     public void onRefresh() {
 
-            presenter.loadAppointmentList(String.valueOf(user.getUserId()));
+        token = realm.where(Token.class).findFirst();
+            presenter.loadAppointmentList(token.getToken());
     }
 
 
@@ -252,6 +261,8 @@ public class PastAppointmentActivity
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
+        binding.swipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -287,11 +298,9 @@ public class PastAppointmentActivity
 
 
         Date c = Calendar.getInstance().getTime();
-        appointmentlmResults = realm.where(Appointment.class).findAll();
-        appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
-                .lessThan("appointmentTimestamp",c )
-                .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
-
+        appointmentlmResults = realm.where(Appointment.class).lessThan("appointmentTimestamp",c )
+                .findAll();
+        appointmentListAdapter.setAppointmentResult(appointmentlmResults);//Sorted("eventDateFrom", Sort.ASCENDING)));
         appointmentListAdapter.notifyDataSetChanged();
 
 
@@ -326,7 +335,9 @@ public class PastAppointmentActivity
 
 
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        presenter.loadAppointmentList(String.valueOf(user.getUserId()));
+        feedbackBinding.etFeedback.setText("");
+        feedbackBinding.ratingBar.setRating(0);
+
     }
 
 
@@ -335,12 +346,12 @@ public class PastAppointmentActivity
 
 
     @Override
-    public void showAppointmentDetails(Appointment appointment) {
+    public void viewDetails(final Appointment appointment) {
 
 
 
 
-
+        token = realm.where(Token.class).findFirst();
         dialogDetail = new Dialog(getContext(),R.style.RaffleDialogTheme);
 
         dialogDetail.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
@@ -350,6 +361,7 @@ public class PastAppointmentActivity
                 R.layout.dialog_appointment_detail_past,
                 null,
                 false);
+
 
 
         detailBinding.setView(getMvpView());
@@ -369,31 +381,7 @@ public class PastAppointmentActivity
             @Override
             public void onClick(View v) {
 
-//                new AppRatingDialog.Builder()
-//                        .setPositiveButtonText("Submit")
-//                        .setNegativeButtonText("Cancel")
-//                        .setNeutralButtonText("Later")
-//                        .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-//                        .setDefaultRating(2)
-//                        .setTitle("Rate this application")
-//                        .setDescription("Please select some stars and give your feedback")
-//                        .setCommentInputEnabled(true)
-//                        .setDefaultComment("This app is pretty cool !")
-//                        .setStarColor(R.color.colorPrimary)
-//                        .setNoteDescriptionTextColor(R.color.colorPrimaryDark)
-//                        .setTitleTextColor(R.color.black)
-//                        .setDescriptionTextColor(R.color.gray)
-//                        .setHint("Please write your comment here ...")
-//                       // .setHintTextColor(R.color.hintTextColor)
-//                        .setCommentTextColor(R.color.white)
-//                        .setCommentBackgroundColor(R.color.colorPrimaryDark)
-//                        .setWindowAnimation(R.style.MyDialogFadeAnimation)
-//                        .setCancelable(false)
-//                        .setCanceledOnTouchOutside(false)
-//                        .create(getActivity())
-//                     //   .setTargetFragment(this, TAG) // only if listener is implemented by fragment
-//                        .show();
-//
+            showfeedback(appointment.getAppointmentId(),appointment.getAssessmentWindow().getAssignedUser().getAssignId(),appointment.getPaymentWindow().getAssignedUser().getAssignId());
            }
         });
 
@@ -457,21 +445,100 @@ public class PastAppointmentActivity
     }
 
 
-//    @Override
-//    public void onPositiveButtonClicked(int rate, String comment) {
-//        // interpret results, send it to analytics etc...
-//    }
-//
-//    @Override
-//    public void onNegativeButtonClicked() {
-//
-//    }
-//
-//    @Override
-//    public void onNeutralButtonClicked() {
-//
-//    }
+    public void showfeedback(final String queueid, final int frontlinerid, final int cashierid)
+    {
 
+
+
+        dialogfeedback = new Dialog(getContext(),R.style.RaffleDialogTheme);
+
+        dialogfeedback.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        feedbackBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_add_feedback,
+                null,
+                false);
+
+
+        feedbackBinding.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+
+
+                String comment="";
+                switch (Math.round(rating)) {
+                    case 0:
+                        feedbackBinding.ratingText.setVisibility(View.GONE);
+                    break;
+                    case 1:
+                        comment = "Very Bad!";
+                        feedbackBinding.ratingText.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        comment = "Not good!";
+                        feedbackBinding.ratingText.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        comment = "Quite ok!";
+                        feedbackBinding.ratingText.setVisibility(View.VISIBLE);
+                        break;
+                    case 4:
+                        comment = "Very Good!";
+                        feedbackBinding.ratingText.setVisibility(View.VISIBLE);
+                        break;
+                    case 5:
+                        comment = "Excellent!";
+                        feedbackBinding.ratingText.setVisibility(View.VISIBLE);
+                        break;
+                }
+
+
+                feedbackBinding.ratingText.setText(comment);
+            }
+        });
+
+
+        feedbackBinding.frontliner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(feedbackBinding.etFeedback.getText().toString().equals(""))
+                    feedbackBinding.etFeedback.setText(feedbackBinding.ratingText.getText().toString());
+
+                if(feedbackBinding.ratingBar.getRating()!=0)
+                    presenter.sendFeedback(token.getToken(),String.valueOf(frontlinerid),queueid,String.valueOf(feedbackBinding.ratingBar.getRating()),feedbackBinding.etFeedback.getText().toString());
+                else
+                    showError("Please Select Rating");
+            }
+        });
+
+        feedbackBinding.cashier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(feedbackBinding.etFeedback.getText().toString().equals(""))
+                    feedbackBinding.etFeedback.setText(feedbackBinding.ratingText.getText().toString());
+
+                if(feedbackBinding.ratingBar.getRating()!=0)
+                    presenter.sendFeedback(token.getToken(),String.valueOf(cashierid),queueid,String.valueOf(feedbackBinding.ratingBar.getRating()),feedbackBinding.etFeedback.getText().toString());
+                else
+                    showError("Please Select Rating");
+            }
+        });
+
+        feedbackBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogfeedback.dismiss();
+            }
+        });
+
+        dialogfeedback.setContentView(feedbackBinding.getRoot());
+        dialogfeedback.setCancelable(true);
+        dialogfeedback.show();
+
+    }
 
 
 }

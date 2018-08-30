@@ -296,6 +296,57 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
 
     }
 
+    public void cancelAppointment( String token,String id)
+    {
+        getView().startLoading();
+        App.getInstance().getApiInterface().cancelAppointment( Constants.APPJSON,Constants.BEARER+token,id).enqueue(new Callback<ResultResponse>() {
+            @Override
+            public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+
+
+                    final Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            //  realm.delete(Barangay.class);
+                            //    realm.copyToRealmOrUpdate(response.body().getBarangay());
+
+
+                        }
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            realm.close();
+                            getView().showReturnCancel("Cancelling Appointment Successful");
+
+
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            realm.close();
+                            getView().showError("Error Saving API Response");
+                        }
+                    });
+
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
 
     public void refresh(String token) {
         getView().startLoading();
@@ -349,6 +400,7 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
         });
 
     }
+
 
 
 

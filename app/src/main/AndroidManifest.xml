@@ -46,6 +46,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+        android:name=".ui.feedback.FeedbackListActivity"
+        android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.profile.edit.EditProfileActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Register"/>

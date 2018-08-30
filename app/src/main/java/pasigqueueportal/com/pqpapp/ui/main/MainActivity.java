@@ -23,6 +23,7 @@ import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.app.Endpoints;
 import pasigqueueportal.com.pqpapp.databinding.ActivityMainBinding;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.feedback.FeedbackListActivity;
 import pasigqueueportal.com.pqpapp.ui.location.MapActivity;
 import pasigqueueportal.com.pqpapp.ui.login.LoginActivity;
 import pasigqueueportal.com.pqpapp.ui.profile.ProfileActivity;
@@ -128,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_profile) {
             startActivity(new Intent(this, ProfileActivity.class));
+        }else if (id == R.id.nav_feedback) {
+            startActivity(new Intent(this, FeedbackListActivity.class));
         }
         else if (id == R.id.nav_location) {
            // startActivity(new Intent(this, MapActivity.class));

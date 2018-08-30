@@ -10,6 +10,7 @@ import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
+import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,57 +28,105 @@ public class PastAppointmentPresenter extends MvpBasePresenter<PastAppointmentVi
 
 
 
-        public void loadAppointmentList(String token) {
+    public void loadAppointmentList(String token) {
 
-//            getView().startLoading();
-//            App.getInstance().getApiInterface().getUserAppointment( Constants.APPJSON,Constants.BEARER+token).enqueue(new Callback<AppointmentResponse>() {
-//                @Override
-//                public void onResponse(Call<AppointmentResponse> call, final Response<AppointmentResponse> response) {
-//                    getView().stopLoading();
-//                    if (response.isSuccessful()) {
-//
-//
-//                        final Realm realm = Realm.getDefaultInstance();
-//                        realm.executeTransactionAsync(new Realm.Transaction() {
-//                            @Override
-//                            public void execute(Realm realm) {
-//                                realm.delete(Appointment.class);
-//                                realm.copyToRealmOrUpdate(response.body().getAppointments());
-//
-//
-//                            }
-//                        }, new Realm.Transaction.OnSuccess() {
-//                            @Override
-//                            public void onSuccess() {
-//                                realm.close();
-//                                getView().setAppointmentList();
-//
-//                            }
-//                        }, new Realm.Transaction.OnError() {
-//                            @Override
-//                            public void onError(Throwable error) {
-//                                realm.close();
-//                                getView().showError("Error Saving API Response");
-//                            }
-//                        });
-//
-//                    } else {
-//
-//                        getView().showError(response.body().getMessage());
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<AppointmentResponse> call, Throwable t) {
-//                    getView().stopLoading();
-//                    getView().stopLoading();
-//                    getView().showError("Error Connecting to Server");
-//                }
-//            });
+        getView().startLoading();
+        App.getInstance().getApiInterface().getUserAppointment( Constants.APPJSON,Constants.BEARER+token).enqueue(new Callback<AppointmentResponse>() {
+            @Override
+            public void onResponse(Call<AppointmentResponse> call, final Response<AppointmentResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
 
 
-        }
+                    final Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.delete(Appointment.class);
+                            realm.copyToRealmOrUpdate(response.body().getAppointments());
 
+
+                        }
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            realm.close();
+                            getView().setAppointmentList();
+
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            realm.close();
+                            getView().showError("Error Saving API Response");
+                        }
+                    });
+
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AppointmentResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
+    public void sendFeedback(String token,String employee_id,String queueid,String rating,String message)
+    {
+        getView().startLoading();
+        App.getInstance().getApiInterface().sendFeedback( Constants.APPJSON,Constants.BEARER+token,employee_id,queueid,rating,message).enqueue(new Callback<ResultResponse>() {
+            @Override
+            public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+                    if (response.body().isSuccess()) {
+
+                        final Realm realm = Realm.getDefaultInstance();
+                        realm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+
+
+                            }
+                        }, new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                realm.close();
+                                getView().showReturn("Thank you for your feedback!");
+
+                            }
+                        }, new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                realm.close();
+                                getView().showError("Error Saving API Response");
+                            }
+                        });
+                    }else
+                        getView().showError(response.body().getMessage());
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
 
     public String getTransactionType(int id)
     {

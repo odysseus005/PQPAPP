@@ -571,7 +571,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
            // googleMap.addMarker(new MarkerOptions().position(destination));
 
         ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
-        mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.parseColor("#f3bc00")));
+        mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.parseColor("#007a60")));
 
             Route route = direction.getRouteList().get(0);
             Leg leg = route.getLegList().get(0);

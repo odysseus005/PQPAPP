@@ -30,7 +30,7 @@ public class FeedbackResponse extends  BasicResponse {
         this.feedback = feedback;
     }
 
-    @SerializedName("feedback")
+    @SerializedName("feedbacks")
     private List<Feedback> feedback;
 
 

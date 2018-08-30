@@ -4,7 +4,9 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -63,8 +65,12 @@ public class PastAppointmentAdapter extends RecyclerView.Adapter<PastAppointment
 
 
 
-            holder.itemAppointmentBinding.setAppointment(pastappointment.get(position));
+
+            holder.itemAppointmentBinding.setApp(pastappointment.get(position));
             holder.itemAppointmentBinding.setView(view);
+
+
+
         holder.itemAppointmentBinding.appointListTaxType.setText((getTaxType(pastappointment.get(position).getAppointmentTaxType())).getTaxTypeDesc());
         holder.itemAppointmentBinding.appointListTransType.setText(getTransactionType(Integer.parseInt(pastappointment.get(position).getAppointmentTransType())));
         holder.itemAppointmentBinding.appointListDate.setText(FunctionUtils.appointListTimestampMonDate(pastappointment.get(position).getAppointmentTransDate()));
@@ -72,7 +78,7 @@ public class PastAppointmentAdapter extends RecyclerView.Adapter<PastAppointment
         holder.itemAppointmentBinding.appointListTime.setText(FunctionUtils.hour24to12hour(pastappointment.get(position).getAppointmentTransTime()));
         if(pastappointment.get(position).getAppointmentTransType().equals("2")&&pastappointment.get(position).getAppointmentTransStatus().equals("P"))
         {
-            holder.itemAppointmentBinding.appointmentStatusColor.setBackgroundColor(Color.parseColor("#b95d5d"));
+            holder.itemAppointmentBinding.appointmentStatusColor.setBackgroundColor(Color.parseColor("#e29191"));
             holder.itemAppointmentBinding.pastappointstatus.setText("Unpaid");
         }
             else{
@@ -81,8 +87,23 @@ public class PastAppointmentAdapter extends RecyclerView.Adapter<PastAppointment
         }
 
 
+        holder.itemAppointmentBinding.appointListCardview.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+
+                view.viewDetails(pastappointment.get(position));
+
+
+
+            }
+        });
+
+
 
     }
+
+
 
 
 
@@ -106,7 +127,7 @@ public class PastAppointmentAdapter extends RecyclerView.Adapter<PastAppointment
                 break;
             case "C":
 
-                returnColor = Color.parseColor("#b95d5d");
+                returnColor = Color.parseColor("#e29191");
                 break;
 
             default:

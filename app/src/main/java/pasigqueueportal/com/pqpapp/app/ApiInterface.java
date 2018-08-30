@@ -22,6 +22,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 
 public interface ApiInterface {
@@ -100,6 +101,15 @@ public interface ApiInterface {
                                                 @Header(Constants.AUTHORIZATION) String authorization
 
     );
+
+    @PATCH(Endpoints.CANCEL_APPOINT)
+    Call<ResultResponse>cancelAppointment(@Header(Constants.ACCEPT) String json,
+                                                @Header(Constants.AUTHORIZATION) String authorization,
+                                               @Path("id") String queueid
+
+    );
+
+
 
 
     @FormUrlEncoded
