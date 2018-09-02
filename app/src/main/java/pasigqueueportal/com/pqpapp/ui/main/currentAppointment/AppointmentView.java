@@ -4,6 +4,7 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 
 
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
+import pasigqueueportal.com.pqpapp.model.data.CurrentServing;
 
 
 public interface AppointmentView extends MvpView {
@@ -22,6 +23,8 @@ public interface AppointmentView extends MvpView {
     void loadTaxType();
 
     void loadBarangay();
+
+    void loadNowServing(CurrentServing curserve);
 
     void layoutSwitch(int switcher);
 

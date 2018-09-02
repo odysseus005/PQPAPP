@@ -254,6 +254,10 @@ public class FeedbackListActivity
         {
             binding.feedbackNoRecyclerview.setVisibility(View.VISIBLE);
             binding.recyclerView.setVisibility(View.GONE);
+        }else
+        {
+            binding.feedbackNoRecyclerview.setVisibility(View.GONE);
+            binding.recyclerView.setVisibility(View.VISIBLE);
         }
     }
 

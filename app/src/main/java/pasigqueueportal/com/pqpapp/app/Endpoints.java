@@ -30,6 +30,7 @@ public class Endpoints {
     public static final String GET_TAXTYPE = "taxtypes";
     public static final String GET_BARANGAY = "barangay";
     public static final String APPOINTMENT = "queue";
+    public static final String CURRENT_SERVING = "window/{id}/serving";
 
     //Feedback
     public static final String FEEDBACK = "feedback";

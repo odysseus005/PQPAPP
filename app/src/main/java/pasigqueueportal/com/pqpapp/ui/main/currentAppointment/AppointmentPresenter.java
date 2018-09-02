@@ -12,10 +12,12 @@ import pasigqueueportal.com.pqpapp.app.App;
 import pasigqueueportal.com.pqpapp.app.Constants;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
+import pasigqueueportal.com.pqpapp.model.data.CurrentServing;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
 import pasigqueueportal.com.pqpapp.model.response.BarangayResponse;
+import pasigqueueportal.com.pqpapp.model.response.CurrentServingResponse;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
@@ -402,7 +404,72 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
     }
 
 
+    public void currentServing( String token,String id)
+    {
+        getView().startLoading();
+        App.getInstance().getApiInterface().currentServing( Constants.APPJSON,Constants.BEARER+token,id).enqueue(new Callback<CurrentServingResponse>() {
+            @Override
+            public void onResponse(Call<CurrentServingResponse> call, final Response<CurrentServingResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
 
+                   final CurrentServing cs = new CurrentServing();
+
+                    final Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                              realm.delete(CurrentServing.class);
+                            if(response.body().getCurrServe().isLoaded())
+                            {
+                                cs.setCsId("1");
+                                cs.setCsQueueNo("0");
+                                cs.setCsWindowId("0");
+
+                            }else
+                            {
+                                cs.setCsId(response.body().getCurrServe().getCsId());
+                                cs.setCsQueueNo(response.body().getCurrServe().getCsQueueNo());
+                                cs.setCsWindowId(response.body().getCurrServe().getCsWindowId());
+                            }
+
+                                realm.copyToRealmOrUpdate(cs);
+
+
+
+                        }
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            realm.close();
+                           getView().loadNowServing(cs);
+
+
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            realm.close();
+                            getView().showError("Error Getting Now Serving");
+                        }
+                    });
+
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CurrentServingResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
 
 
 

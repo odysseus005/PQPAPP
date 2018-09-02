@@ -32,6 +32,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
@@ -52,6 +56,7 @@ import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentRemindersBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
+import pasigqueueportal.com.pqpapp.model.data.CurrentServing;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
@@ -188,6 +193,10 @@ public class AppointmentActivity
 
 
         binding.txtDateToday.setText(FunctionUtils.convertDateToString("MMMM dd, yyyy", Calendar.getInstance()));
+
+
+
+
     }
 
     @NonNull
@@ -357,6 +366,10 @@ public class AppointmentActivity
 
             binding.appointmentcurrentNoRecyclerview.setVisibility(View.VISIBLE);
             binding.recyclerView.setVisibility(View.GONE);
+        }else
+        {
+            binding.appointmentcurrentNoRecyclerview.setVisibility(View.GONE);
+            binding.recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -449,8 +462,61 @@ public class AppointmentActivity
                 false);
 
 
+        try {
+            appointment.getPaymentWindow().isLoaded();
+        }catch (Exception e)
+        {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    appointment.setPaymentWindow(appointment.getAssessmentWindow());
+                }
+            });
+
+        }
+
+
+
+        PusherOptions options = new PusherOptions();
+        options.setCluster("ap1");
+
+        Pusher pusher = new Pusher("a193f173e233c07d855d", options);
+        pusher.connect();
+
+        String channelSwitch;
+
+        if(appointment.getAppointmentTransType().equals("2")) {
+            channelSwitch = "window." + appointment.getPaymentWindow().getPaymentDesc();
+            presenter.currentServing(token.getToken(),appointment.getPaymentWindow().getPaymentAssignId());
+        }
+        else {
+            channelSwitch = "window." + appointment.getAssessmentWindow().getPaymentDesc();
+            presenter.currentServing(token.getToken(),appointment.getAssessmentWindow().getPaymentAssignId());
+
+        }
+
+
+        Channel channel = pusher.subscribe(channelSwitch);
+
+
+        channel.bind("ChangeServed", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String channelName, String eventName, final String data) {
+                Log.d(">>>>",data);
+//                          final CurrentServing cs = new CurrentServing();
+//                            cs.setCsId("1");
+//                            cs.setCsQueueNo("0");
+//                            cs.setCsWindowId("0");
+              //  loadNowServing();
+            }
+        });
+
+
+
         detailBinding.setView(getMvpView());
         detailBinding.setAppointment(appointment);
+
+
 
         if(reserveChecker)
                 detailBinding.textSuccess.setVisibility(View.VISIBLE);
@@ -524,6 +590,16 @@ public class AppointmentActivity
         dialogDetail.show();
 
     }
+
+    @Override
+    public void loadNowServing(CurrentServing currentServing){
+
+
+        detailBinding.currentServing.setText("Now Serving: "+currentServing.getCsQueueNo());
+
+    }
+
+
 
 
 

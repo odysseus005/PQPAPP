@@ -8,6 +8,7 @@ import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
 import pasigqueueportal.com.pqpapp.model.response.BarangayResponse;
+import pasigqueueportal.com.pqpapp.model.response.CurrentServingResponse;
 import pasigqueueportal.com.pqpapp.model.response.FeedbackResponse;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
@@ -146,6 +147,15 @@ public interface ApiInterface {
                                       @Header(Constants.AUTHORIZATION) String authorization
 
     );
+
+
+    @GET(Endpoints.CURRENT_SERVING)
+    Call<CurrentServingResponse>currentServing(@Header(Constants.ACCEPT) String json,
+                                               @Header(Constants.AUTHORIZATION) String authorization,
+                                               @Path("id") String windowid
+
+    );
+
 
     //Feedback
     @FormUrlEncoded
