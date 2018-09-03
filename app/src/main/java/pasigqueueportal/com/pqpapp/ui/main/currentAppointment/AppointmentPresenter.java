@@ -420,20 +420,10 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         @Override
                         public void execute(Realm realm) {
                               realm.delete(CurrentServing.class);
-                            if(response.body().getCurrServe().isLoaded())
-                            {
-                                cs.setCsId("1");
-                                cs.setCsQueueNo("0");
-                                cs.setCsWindowId("0");
 
-                            }else
-                            {
-                                cs.setCsId(response.body().getCurrServe().getCsId());
-                                cs.setCsQueueNo(response.body().getCurrServe().getCsQueueNo());
-                                cs.setCsWindowId(response.body().getCurrServe().getCsWindowId());
-                            }
+//
 
-                                realm.copyToRealmOrUpdate(cs);
+                                realm.copyToRealmOrUpdate(response.body().getCurrServe());
 
 
 
@@ -442,7 +432,7 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         @Override
                         public void onSuccess() {
                             realm.close();
-                           getView().loadNowServing(cs);
+                           getView().loadNowServing(response.body().getCurrServe().getCsQueueNo());
 
 
                         }
@@ -450,7 +440,9 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         @Override
                         public void onError(Throwable error) {
                             realm.close();
-                            getView().showError("Error Getting Now Serving");
+
+
+                            getView().loadNowServing("0");
                         }
                     });
 

@@ -24,7 +24,7 @@ public interface AppointmentView extends MvpView {
 
     void loadBarangay();
 
-    void loadNowServing(CurrentServing curserve);
+    void loadNowServing(String curserve);
 
     void layoutSwitch(int switcher);
 

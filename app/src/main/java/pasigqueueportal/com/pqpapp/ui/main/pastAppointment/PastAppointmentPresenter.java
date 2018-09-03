@@ -8,8 +8,10 @@ import pasigqueueportal.com.pqpapp.app.App;
 import pasigqueueportal.com.pqpapp.app.Constants;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
+import pasigqueueportal.com.pqpapp.model.data.CurrentServing;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.response.AppointmentResponse;
+import pasigqueueportal.com.pqpapp.model.response.CurrentServingResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -151,6 +153,64 @@ public class PastAppointmentPresenter extends MvpBasePresenter<PastAppointmentVi
 
 
 
+    public void currentServing( String token,String id)
+    {
+        getView().startLoading();
+        App.getInstance().getApiInterface().currentServing( Constants.APPJSON,Constants.BEARER+token,id).enqueue(new Callback<CurrentServingResponse>() {
+            @Override
+            public void onResponse(Call<CurrentServingResponse> call, final Response<CurrentServingResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+
+                    final CurrentServing cs = new CurrentServing();
+
+                    final Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.delete(CurrentServing.class);
+
+//
+
+                            realm.copyToRealmOrUpdate(response.body().getCurrServe());
+
+
+
+                        }
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            realm.close();
+                            getView().loadNowServing(response.body().getCurrServe().getCsQueueNo());
+
+
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            realm.close();
+
+
+                            getView().loadNowServing("0");
+                        }
+                    });
+
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CurrentServingResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
 
 
     public void onStop() {

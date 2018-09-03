@@ -25,7 +25,15 @@ import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -40,8 +48,10 @@ import pasigqueueportal.com.pqpapp.databinding.DialogAddFeedbackBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailPastBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentRemindersBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
+import pasigqueueportal.com.pqpapp.model.data.CurrentServing;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.model.data.Window;
 import pasigqueueportal.com.pqpapp.ui.location.MapActivity;
 
 
@@ -368,6 +378,84 @@ public class PastAppointmentActivity
 
 
 
+        try {
+            appointment.getPaymentWindow().isLoaded();
+        }catch (Exception e)
+        {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    appointment.setPaymentWindow(appointment.getAssessmentWindow());
+                }
+            });
+
+        }
+
+
+        String channelSwitch;
+
+        if(appointment.getAppointmentTransType().equals("2")) {
+            channelSwitch = "window." +   (appointment.getPaymentWindow().getPaymentDesc()).replaceAll("[^0-9]", "");
+            presenter.currentServing(token.getToken(),appointment.getPaymentWindow().getPaymentAssignId());
+        }
+        else {
+            channelSwitch = "window." +   (appointment.getAssessmentWindow().getPaymentDesc()).replaceAll("[^0-9]", "");
+            presenter.currentServing(token.getToken(),appointment.getAssessmentWindow().getPaymentAssignId());
+        }
+
+
+        PusherOptions options = new PusherOptions();
+        options.setCluster("ap1");
+        Pusher pusher = new Pusher("a193f173e233c07d855d", options);
+
+
+
+        Channel channel = pusher.subscribe(channelSwitch);
+
+        Log.d(">>>>channelswitch>>",channelSwitch);
+
+
+        channel.bind("App\\Events\\QueueUpdated", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String channelName, String eventName, final String data) {
+                Log.d(">>>>",data);
+              String text="";
+                try {
+                    JSONObject data2 = new JSONObject(data).getJSONObject("queue");
+                    text = data2.getString("queue_no");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                loadNowServing(text);
+            }
+        });
+
+
+
+//        channel.bind("App\\Events\\CallAgain", new SubscriptionEventListener() {
+//            @Override
+//            public void onEvent(String channelName, String eventName, final String data) {
+//                Log.d(">>>>",data);
+//                String text="";
+//                try {
+//                 JSONObject data2 = new JSONObject(data).getJSONObject("window");
+//                text = data2.getString("id");
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//
+//            }
+//        });
+
+
+        pusher.connect();
+
+
+
         detailBinding.setView(getMvpView());
         detailBinding.setAppointment(appointment);
 
@@ -413,6 +501,27 @@ public class PastAppointmentActivity
 
 
     }
+
+
+
+
+    @Override
+    public void loadNowServing(final String currentServing){
+
+
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                detailBinding.currentServing.setText("Now Serving: "+currentServing);
+            }
+        });
+
+
+
+    }
+
 
 
 

@@ -38,6 +38,9 @@ import com.pusher.client.channel.Channel;
 import com.pusher.client.channel.SubscriptionEventListener;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -257,6 +260,9 @@ public class AppointmentActivity
 
     @Override
     public void onRefresh() {
+
+        presenter.loadBarangay(token.getToken());
+        presenter.loadTaxType(token.getToken());
             presenter.loadAppointmentList(token.getToken());
     }
 
@@ -423,10 +429,10 @@ public class AppointmentActivity
 
         presenter.loadAppointmentList(token.getToken());
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        selectedBaranagay="";selectedTaxtype="";selectedDate="";
+//        selectedBaranagay="";selectedTaxtype="";selectedDate="";
         assesTypeAdapter.reset();
         dialog.dismiss();
-
+        hideAssessTypeAdapter();
         reserveChecker=true;
         showAppointmentDetails(appointment);
 
@@ -475,41 +481,67 @@ public class AppointmentActivity
 
         }
 
+        String channelSwitch;
+
+        if(appointment.getAppointmentTransType().equals("2")) {
+            channelSwitch = "window." +   (appointment.getPaymentWindow().getPaymentDesc()).replaceAll("[^0-9]", "");
+            presenter.currentServing(token.getToken(),appointment.getPaymentWindow().getPaymentAssignId());
+        }
+        else {
+            channelSwitch = "window." +   (appointment.getAssessmentWindow().getPaymentDesc()).replaceAll("[^0-9]", "");
+            presenter.currentServing(token.getToken(),appointment.getAssessmentWindow().getPaymentAssignId());
+        }
 
 
         PusherOptions options = new PusherOptions();
         options.setCluster("ap1");
-
         Pusher pusher = new Pusher("a193f173e233c07d855d", options);
-        pusher.connect();
 
-        String channelSwitch;
-
-        if(appointment.getAppointmentTransType().equals("2")) {
-            channelSwitch = "window." + appointment.getPaymentWindow().getPaymentDesc();
-            presenter.currentServing(token.getToken(),appointment.getPaymentWindow().getPaymentAssignId());
-        }
-        else {
-            channelSwitch = "window." + appointment.getAssessmentWindow().getPaymentDesc();
-            presenter.currentServing(token.getToken(),appointment.getAssessmentWindow().getPaymentAssignId());
-
-        }
 
 
         Channel channel = pusher.subscribe(channelSwitch);
 
+        Log.d(">>>>channelswitch>>",channelSwitch);
 
-        channel.bind("ChangeServed", new SubscriptionEventListener() {
+
+        channel.bind("App\\Events\\QueueUpdated", new SubscriptionEventListener() {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
                 Log.d(">>>>",data);
-//                          final CurrentServing cs = new CurrentServing();
-//                            cs.setCsId("1");
-//                            cs.setCsQueueNo("0");
-//                            cs.setCsWindowId("0");
-              //  loadNowServing();
+                String text="";
+                try {
+                    JSONObject data2 = new JSONObject(data).getJSONObject("queue");
+                    text = data2.getString("queue_no");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                loadNowServing(text);
             }
         });
+
+
+//
+//        channel.bind("App\\Events\\CallAgain", new SubscriptionEventListener() {
+//            @Override
+//            public void onEvent(String channelName, String eventName, final String data) {
+//                Log.d(">>>>",data);
+//                String text="";
+//                try {
+//                    JSONObject data2 = new JSONObject(data).getJSONObject("window");
+//                    text = data2.getString("id");
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//
+//            }
+//        });
+
+
+        pusher.connect();
 
 
 
@@ -592,11 +624,17 @@ public class AppointmentActivity
     }
 
     @Override
-    public void loadNowServing(CurrentServing currentServing){
+    public void loadNowServing(final String currentServing){
 
 
-        detailBinding.currentServing.setText("Now Serving: "+currentServing.getCsQueueNo());
+        getActivity().runOnUiThread(new Runnable() {
 
+            @Override
+            public void run() {
+
+                detailBinding.currentServing.setText("Now Serving: "+currentServing);
+            }
+        });
     }
 
 
