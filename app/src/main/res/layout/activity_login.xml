@@ -61,7 +61,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:singleLine="true"
             android:focusableInTouchMode="true"
-            android:hint="Email"
+            android:hint="Username"
            />
 
         <EditText

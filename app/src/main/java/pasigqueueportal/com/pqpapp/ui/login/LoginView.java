@@ -22,6 +22,8 @@ public interface LoginView extends MvpView {
 
     void stopLoading();
 
+    void logOut();
+
     void onLoginSuccess(Token token);
 
     void onLoginSuccess2(Token token);

@@ -125,17 +125,6 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
-                        <TextView
-                            android:id="@+id/currentServing"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-
 
                     </LinearLayout>
 
@@ -147,10 +136,12 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
+                        android:id="@+id/appointmentDetailsClick"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -172,6 +163,13 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle" />
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:id="@+id/appointmentDetailsHide">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -378,6 +376,7 @@
 
 
 
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
@@ -406,6 +405,50 @@
                         android:textColor="@color/black"
 
                         />
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:id="@+id/appointmentServingClick"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/gray"
+                            android:src="@drawable/ic_serving"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Current Serving"
+                            android:layout_marginLeft="3dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/currentServing"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+
 
                     <LinearLayout
                         android:layout_width="match_parent"

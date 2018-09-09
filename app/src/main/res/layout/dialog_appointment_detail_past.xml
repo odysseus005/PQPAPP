@@ -150,6 +150,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
+                        android:id="@+id/appointmentDetailsClick"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -171,6 +172,13 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle" />
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:id="@+id/appointmentDetailsHide">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -429,6 +437,8 @@
                         android:textColor="@color/black"
 
                         />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

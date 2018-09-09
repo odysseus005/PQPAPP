@@ -495,6 +495,17 @@ public class PastAppointmentActivity
             }
         });
 
+
+        detailBinding.appointmentDetailsClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(detailBinding.appointmentDetailsHide.getVisibility()==View.VISIBLE)
+                    detailBinding.appointmentDetailsHide.setVisibility(View.GONE);
+                else
+                    detailBinding.appointmentDetailsHide.setVisibility(View.VISIBLE);
+            }
+        });
+
         dialogDetail.setContentView(detailBinding.getRoot());
         dialogDetail.setCancelable(true);
         dialogDetail.show();

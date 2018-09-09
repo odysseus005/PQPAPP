@@ -94,6 +94,23 @@ public interface ApiInterface {
                                     @Part(Constants.IMAGE) RequestBody name);
 
 
+    //Firebase
+
+    @GET(Endpoints.SAMPLE_FCM)
+    Call<ResultResponse>getFCM(@Header(Constants.ACCEPT) String json,
+                                                @Header(Constants.AUTHORIZATION) String authorization
+
+    );
+
+    @FormUrlEncoded
+    @PATCH(Endpoints.SEND_ID)
+    Call<ResultResponse>sendFCM(@Header(Constants.ACCEPT) String json,
+                                          @Header(Constants.AUTHORIZATION) String authorization,
+                                          @Field("token") String fcmid
+
+    );
+
+
 
     //Appointment
 

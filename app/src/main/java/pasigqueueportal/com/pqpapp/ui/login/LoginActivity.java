@@ -27,6 +27,7 @@ import pasigqueueportal.com.pqpapp.databinding.ActivityLoginBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogVerificationBinding;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
+import pasigqueueportal.com.pqpapp.ui.forgot.ForgotPasswordActivity;
 import pasigqueueportal.com.pqpapp.ui.main.MainActivity;
 import pasigqueueportal.com.pqpapp.ui.register.RegisterActivity;
 
@@ -270,7 +271,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     @Override
     public void onForgotPasswordButtonClicked() {
 
-       // startActivity(new Intent(this, ForgotPasswordActivity.class));
+        startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
     @Override
@@ -293,7 +294,32 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 //        loginViewState.setUsername(binding.etEmail.getText().toString());
   //      loginViewState.setPassword(binding.etPassword.getText().toString());
     }
+    @Override
+    public void logOut() {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                realm.close();
+//                Intent intent = new Intent(this, LoginActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                error.printStackTrace();
+                realm.close();
+               // Toast.makeText(this, "Realm Error", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+    }
 
 }
 

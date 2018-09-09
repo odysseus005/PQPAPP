@@ -66,6 +66,7 @@ public class MapPresenter extends MvpNullObjectBasePresenter<MapView> {
 
 
     public void onStop() {
+        if(realm!=null)
         realm.close();
     }
 

@@ -30,6 +30,11 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.iid.InstanceIdResult;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.pusher.client.Pusher;
@@ -83,7 +88,7 @@ public class AppointmentActivity
     private RealmResults<Barangay> barangayRealmResults;
     private RealmResults<TaxType> taxTypeRealmResults;
     private String searchText;
-    public String id,appointid;
+    public String id,appointid,fcmID="";
     private AppointmentAdapter appointmentListAdapter;
     private AssesTypeAdapter assesTypeAdapter;
     private UnpaidAdapter unpaidAdapter;
@@ -177,7 +182,7 @@ public class AppointmentActivity
         binding.attendeeScan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-
+               // presenter.loadNotif(token.getToken());
                 dialogSetAppointment();
 
 
@@ -405,6 +410,27 @@ public class AppointmentActivity
     public  void onFinishTokenRef()
     {
         token = realm.where(Token.class).findFirst();
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(">>>>", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                        // String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d(">>>>", token);
+                        fcmID=token;
+                        updateFCM();
+
+                        //   Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
         presenter.loadBarangay(token.getToken());
@@ -412,6 +438,13 @@ public class AppointmentActivity
         presenter.loadAppointmentList(token.getToken());
     }
 
+
+
+
+    public void updateFCM()
+    {
+        presenter.sendFCMId(token.getToken(),fcmID);
+    }
 
     @Override
     public void stopRefresh() {
@@ -458,6 +491,8 @@ public class AppointmentActivity
 
         token = realm.where(Token.class).findFirst();
         dialogDetail = new Dialog(getContext(),R.style.RaffleDialogTheme);
+//        else
+//            dialogDetail = new Dialog(getContext(),android.R.style.Theme_NoTitleBar_Fullscreen);
 
         dialogDetail.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
@@ -550,8 +585,11 @@ public class AppointmentActivity
 
 
 
-        if(reserveChecker)
-                detailBinding.textSuccess.setVisibility(View.VISIBLE);
+        if(reserveChecker) {
+            detailBinding.textSuccess.setVisibility(View.VISIBLE);
+            detailBinding.currentServing.setVisibility(View.GONE);
+            detailBinding.appointmentServingClick.setVisibility(View.GONE);
+        }
 
         if(appointment.getAppointmentTransStatus().equals("C")) {
             detailBinding.cancel.setVisibility(View.GONE);
@@ -566,6 +604,7 @@ public class AppointmentActivity
 
 
         detailBinding.appointmentDetailsStatus.setTextColor(appointmentListAdapter.getStatusColor(appointment.getAppointmentTransStatus()));
+
 
 
 
@@ -616,6 +655,27 @@ public class AppointmentActivity
                 reserveChecker=false;
             }
         });
+
+        detailBinding.appointmentDetailsClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              if(detailBinding.appointmentDetailsHide.getVisibility()==View.VISIBLE)
+                  detailBinding.appointmentDetailsHide.setVisibility(View.GONE);
+              else
+                  detailBinding.appointmentDetailsHide.setVisibility(View.VISIBLE);
+            }
+        });
+
+        detailBinding.appointmentServingClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(detailBinding.currentServing.getVisibility()==View.VISIBLE)
+                    detailBinding.currentServing.setVisibility(View.GONE);
+                else
+                    detailBinding.currentServing.setVisibility(View.VISIBLE);
+            }
+        });
+
 
         dialogDetail.setContentView(detailBinding.getRoot());
         dialogDetail.setCancelable(true);

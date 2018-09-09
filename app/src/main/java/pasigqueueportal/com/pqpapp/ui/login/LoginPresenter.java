@@ -91,6 +91,9 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
         }
     }
 
+
+
+
     public void getUser(String token) {
         getView().startLoading();
         App.getInstance().getApiInterface().getUser( Constants.APPJSON,Constants.BEARER+token).enqueue(new Callback<ResultResponse>() {

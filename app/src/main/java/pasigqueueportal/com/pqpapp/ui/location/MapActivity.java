@@ -1,6 +1,7 @@
 package pasigqueueportal.com.pqpapp.ui.location;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,17 +15,14 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
@@ -36,8 +34,9 @@ import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
+
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -56,21 +55,17 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import io.realm.Case;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityMapBinding;
 import pasigqueueportal.com.pqpapp.model.data.TaxCompany;
 import pasigqueueportal.com.pqpapp.model.data.User;
 import pasigqueueportal.com.pqpapp.util.BitmapUtils;
 import pasigqueueportal.com.pqpapp.util.FunctionUtils;
-import pasigqueueportal.com.pqpapp.util.FusedLocation;
 import pasigqueueportal.com.pqpapp.util.SimpleLocation;
 
 
@@ -85,7 +80,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
     private PlaceAutocompleteFragment autocompleteFragment;
     private Marker myMarker = null;
     private ActivityMapBinding binding;
-    private FusedLocation fusedLocation;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private SimpleLocation location;
     private TaxCompany nearDealer;
     private String distance,eta;
@@ -109,27 +104,22 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
             timeChecker=true;
 
 
+
         user = realm.where(User.class).findFirst();
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+
         realm = Realm.getDefaultInstance();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        initializeMap();
+
 
         location = new SimpleLocation(this);
 
-        fusedLocation = new FusedLocation(this, new FusedLocation.Callback() {
-            @Override
-            public void onLocationResult(Location location) {
-                Log.e(TAG, "Location Triggered\n" + location.getLongitude() + "," + location.getLatitude());
-                stopLoading();
-                setMyMarker(new LatLng(location.getLatitude(), location.getLongitude()));
-            }
-        });
-        ;
+
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +130,11 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
         });
 
 
-
+        if (!checkPlayServices()) {
+            binding.frame.setVisibility(View.GONE);
+            binding.cardView.setVisibility(View.GONE);
+        }else
+            initializeMap();
     }
 
     private void getCurrentLocation()
@@ -155,43 +149,44 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
             showAlert("Can't Access Location Turn on Gps");
         }
     }
+
+
     private void initializeMap() {
-        if (!isGooglePlayServicesAvailable()) {
-            finish();
-        }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        markerUserIcon = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.marker_user, null);
-        markerRestIcon = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.marker_dealer, null);
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+            markerUserIcon = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.marker_user, null);
+            markerRestIcon = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.marker_dealer, null);
 
-        autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+            autocompleteFragment = (PlaceAutocompleteFragment)
+                    getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(Place.TYPE_COUNTRY)
-                .setCountry("PH")
-                .build();
-        autocompleteFragment.setFilter(typeFilter);
-        autocompleteFragment.setHint("Search Place");
-        autocompleteFragment.setBoundsBias(new LatLngBounds(new LatLng(14.503863, 120.859556), new LatLng(14.767616, 121.088896)));
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName());//get place details here
-                //my marker
-                setMyMarker(place.getLatLng());
-                Log.i(TAG, "Place Coordinates: " + place.getLatLng());//get place details here
-            }
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(Place.TYPE_COUNTRY)
+                    .setCountry("PH")
+                    .build();
+            autocompleteFragment.setFilter(typeFilter);
+            autocompleteFragment.setHint("Search Place");
+            autocompleteFragment.setBoundsBias(new LatLngBounds(new LatLng(14.503863, 120.859556), new LatLng(14.767616, 121.088896)));
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    // TODO: Get info about the selected place.
+                    Log.i(TAG, "Place: " + place.getName());//get place details here
+                    //my marker
+                    setMyMarker(place.getLatLng());
+                    Log.i(TAG, "Place Coordinates: " + place.getLatLng());//get place details here
+                }
 
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
+                @Override
+                public void onError(Status status) {
+                    // TODO: Handle the error.
+                    Log.i(TAG, "An error occurred: " + status);
+                }
+            });
+
+
 
     }
 
@@ -356,15 +351,53 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
 
     }
 
-    private boolean isGooglePlayServicesAvailable() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (ConnectionResult.SUCCESS == status) {
-            return true;
-        } else {
-            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
+//    private boolean isGooglePlayServicesAvailable() {
+//      //  int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+//        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+//        if (ConnectionResult.SUCCESS == status) {
+//            return true;
+//        } else {
+//           showAlert("Google Play Service is not Available");
+//            return false;
+//        }
+//    }
+
+
+//    public boolean isGooglePlayServicesAvailable(Activity activity) {
+//        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+//        int status = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+//        if(status != ConnectionResult.SUCCESS) {
+//            if(googleApiAvailability.isUserResolvableError(status)) {
+//                googleApiAvailability.getErrorDialog(activity, status, 2404).show();
+//            }
+//            return false;
+//        }
+//        return true;
+//    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+               Dialog dialog = apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST);
+               dialog.setCancelable(false);
+
+               dialog.show();
+
+
+
+
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
             return false;
         }
+        return true;
     }
+
+
 
 
     public boolean checkLocationPermission() {

@@ -33,6 +33,8 @@ public class ForgotPresenter extends MvpNullObjectBasePresenter<ForgotView> {
 //                getView().showAlert("Error Connecting to Server");
 //            }
 //        });
+
+        getView().showAlert("Coming Soon...");
     }
 
 

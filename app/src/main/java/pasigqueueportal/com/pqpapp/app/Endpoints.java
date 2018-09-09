@@ -24,6 +24,11 @@ public class Endpoints {
     public static final String FIRSTLOGIN = "firstLogin";
 
 
+    //firebase
+    public  static  final  String SEND_ID = "user/fmctoken";
+    public  static  final String SAMPLE_FCM = "fcm/test";
+
+
     //Appointment
     public static final String CANCEL_APPOINT = "queue/{id}/cancel";
     public static final String GET_APPOINT = "user/queue";
