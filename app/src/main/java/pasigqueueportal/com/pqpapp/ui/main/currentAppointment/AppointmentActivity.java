@@ -293,6 +293,8 @@ public class AppointmentActivity
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_custom_item, barangay);
             dialogBinding.spBarangay.setAdapter(arrayAdapter);
 
+            selectedBaranagay=String.valueOf(barangayRealmResults.get(0).getBarangayId());
+
             dialogBinding.spBarangay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -329,6 +331,8 @@ public class AppointmentActivity
 
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_custom_item, tax);
             dialogBinding.spTaxType.setAdapter(arrayAdapter);
+
+            selectedTaxtype = taxTypeRealmResults.get(0).getTaxTypeId();
 
             dialogBinding.spTaxType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -504,7 +508,8 @@ public class AppointmentActivity
 
 
         try {
-            appointment.getPaymentWindow().isLoaded();
+            if(!appointment.getPaymentWindow().isLoaded())
+            appointment.setPaymentWindow(appointment.getAssessmentWindow());
         }catch (Exception e)
         {
             realm.executeTransaction(new Realm.Transaction() {
@@ -589,6 +594,7 @@ public class AppointmentActivity
             detailBinding.textSuccess.setVisibility(View.VISIBLE);
             detailBinding.currentServing.setVisibility(View.GONE);
             detailBinding.appointmentServingClick.setVisibility(View.GONE);
+
         }
 
         if(appointment.getAppointmentTransStatus().equals("C")) {
@@ -728,7 +734,7 @@ public class AppointmentActivity
                 newCalendar.get(Calendar.MONTH),
                 newCalendar.get(Calendar.DAY_OF_MONTH)
         );
-        int daysallowable = 1;//get from database
+        int daysallowable = 0;//get from database
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, daysallowable);
       //  Cal dateBefore30Days = cal.getTime();
@@ -881,13 +887,13 @@ public class AppointmentActivity
                     showError("Please Select Transacion");
                 }else if(selectedTaxtype.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
-                    showError("Please Select Tax Type");
-                }else if(selectedDate.equals("")&&assesTypeAdapter.getSelected().equals("1"))
+                    showError("Please Select Tax Type Again");
+                }else if(selectedDate.equals(""))
                 {
                     showError("Please Select Date");
-                }else if(selectedBaranagay.equals(""))
+                }else if(selectedBaranagay.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
-                    showError("Please Select Barangay");
+                    showError("Please Select Barangay Again");
                 }
                 else {
 

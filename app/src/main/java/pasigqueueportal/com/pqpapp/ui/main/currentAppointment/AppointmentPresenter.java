@@ -389,7 +389,13 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
 
                 } else {
 
-                    getView().showError(response.body().getMessage());
+                    try {
+                        getView().showError(response.body().getMessage());
+                    }
+                    catch (Exception e)
+                    {
+                        getView().showError("Error Connecting to Server!");
+                    }
                 }
             }
 
