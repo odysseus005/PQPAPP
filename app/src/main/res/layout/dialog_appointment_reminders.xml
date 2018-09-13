@@ -63,53 +63,173 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".12"
+                        android:layout_height="wrap_content"
+                        android:text="1."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".88"
+                        android:layout_height="wrap_content"
+                        android:text="Keep your location services on to track your ETA."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".12"
+                        android:layout_height="wrap_content"
+                        android:text="2."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".88"
+                        android:layout_height="wrap_content"
+                        android:text="Actual transaction time may vary depending on the volume preceding transactions."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".12"
+                        android:layout_height="wrap_content"
+                        android:text="3."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".88"
+                        android:layout_height="wrap_content"
+                        android:text="A text message will be send to your cellphone number 15 minutes before estimated call time."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".12"
+                        android:layout_height="wrap_content"
+                        android:text="4."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".88"
+                        android:layout_height="wrap_content"
+                        android:text="Refer to the real-time queue transactions at the homepage to be updated."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".12"
+                        android:layout_height="wrap_content"
+                        android:text="5."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".88"
+                        android:layout_height="wrap_content"
+                        android:text="Failure to appear will forfeit the queue number."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".12"
+                        android:layout_height="wrap_content"
+                        android:text="6."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".88"
+                        android:layout_height="wrap_content"
+                        android:text="Present the electronic queue number to the frontliner or cashier."
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        />
+
+                </LinearLayout>
 
 
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1.  Keep your location services on to track your ETA."
-                    android:layout_marginTop="6dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2.  Actual transaction time may vary depending on the volume preceding transactions."
-                    android:layout_marginTop="6dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3.  A text message will be send t oyour cellphone number 15 minutes before estimated call time."
-                    android:layout_marginTop="6dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="4.  Refer to the real-time queue transactions at the homepage to be updated."
-                    android:layout_marginTop="6dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5.  Failure to appear will forfeit the queue number."
-                    android:layout_marginTop="6dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="6.  Present the electronic queue number to the frontliner or cashier."
-                    android:layout_marginTop="6dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    />
+
+
+
+
+
+
+
 
 
 

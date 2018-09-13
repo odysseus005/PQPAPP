@@ -45,6 +45,7 @@ import java.util.Locale;
 import io.realm.Realm;
 
 import io.realm.RealmResults;
+import io.realm.Sort;
 import pasigqueueportal.com.pqpapp.R;
 import pasigqueueportal.com.pqpapp.databinding.ActivityFeedbackBinding;
 import pasigqueueportal.com.pqpapp.model.data.Feedback;
@@ -245,7 +246,8 @@ public class FeedbackListActivity
 
         feedbackRealmResults = realm.where(Feedback.class).findAllAsync();
         feedbackListAdapter.setEventResult(realm.copyToRealmOrUpdate(feedbackRealmResults.where()
-                .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+                .findAllSorted("feedbackId", Sort.DESCENDING)));
+                //.findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
         feedbackListAdapter.notifyDataSetChanged();
 
 
