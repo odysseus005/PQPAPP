@@ -5,6 +5,8 @@ import android.util.Patterns;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import pasigqueueportal.com.pqpapp.app.App;
@@ -51,7 +53,7 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
                             getView().stopLoading();
                             if (response.isSuccessful()) {
                                 if (response.body().isSuccess()) {
-                                     getView().showAlert(response.body().getMessage());
+                                   //  getView().showAlert(response.body().getMessage());
                                          getView().onRegistrationSuccess();
 
 
@@ -60,13 +62,14 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
                                     getView().showAlert(response.body().getMessage());
                                 }
                             } else {
-                                try {
-                                    String errorBody = response.errorBody().string();
-                                    getView().showAlert(errorBody);
-                                } catch (IOException e) {
-                                    Log.e(TAG, "onResponse: Error parsing error body as string", e);
-                                    getView().showAlert("Can't Connect to Server");
-                                }
+
+                                    try {
+                                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                        getView().showAlert(jObjError.getString("message"));
+                                    } catch (Exception e) {
+                                        getView().showAlert("Error Connecting to Server");
+                                    }
+
                             }
                         }
 

@@ -130,6 +130,58 @@ public class PastAppointmentPresenter extends MvpBasePresenter<PastAppointmentVi
 
     }
 
+    public String getStatus(String p)
+    {
+        String returnStats="";
+
+        if (p.toLowerCase().contains("pe"))
+                returnStats = "P";
+        else if((p.toLowerCase().contains("no")))
+                returnStats = "N";
+        else if((p.toLowerCase().contains("su")))
+            returnStats = "S";
+        else if((p.toLowerCase().contains("ca")))
+            returnStats = "C";
+        else if((p.toLowerCase().contains("un")))
+            returnStats = "U";
+        else
+            returnStats = "";
+
+
+
+        return  returnStats;
+
+    }
+
+    public String searchTransactionType(String trans)
+    {
+
+        if(trans.toLowerCase().contains("assessment"))
+            return "1";
+        else if (trans.toLowerCase().contains("payment"))
+            return "2";
+        else
+            return "0";
+    }
+
+
+    TaxType searchTaxType(String id){
+        return realm.where(TaxType.class)
+                .contains("taxTypeDesc", id)
+                .or()
+                .equalTo("taxTypeDesc",id)
+                .findFirst();
+    }
+
+    Barangay searchBarangay(String id){
+        return realm.where(Barangay.class)
+                .contains("barangayName", id)
+                .or()
+                .equalTo("barangayName",id)
+                .findFirst();
+    }
+
+
     public String getTransactionType(int id)
     {
 

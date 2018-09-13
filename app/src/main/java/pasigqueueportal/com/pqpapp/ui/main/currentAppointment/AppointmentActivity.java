@@ -218,21 +218,22 @@ public class AppointmentActivity
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.main, menu);
-        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchText = newText;
-                //prepareList();
-                return true;
-            }
-        });
+        inflater.inflate(R.menu.main_hide, menu);
+//        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+//        search.setVisibility(View.GONE);
+//        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                searchText = newText;
+//                prepareList();
+//                return true;
+//            }
+//        });
 
     }
 
@@ -361,6 +362,39 @@ public class AppointmentActivity
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+    }
+
+
+    private void prepareList() {
+        if (appointmentlmResults.isLoaded() && appointmentlmResults.isValid()) {
+            Date c = Calendar.getInstance().getTime();
+            if (searchText.isEmpty()) {
+
+
+                appointmentlmResults = realm.where(Appointment.class).findAllAsync();
+                appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+                        .greaterThan("appointmentTimestamp",c )
+                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+                appointmentListAdapter.notifyDataSetChanged();
+
+            } else {
+
+                appointmentlmResults = realm.where(Appointment.class).findAllAsync();
+                appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+                        .greaterThan("appointmentTimestamp",c )
+                        .beginGroup()
+                        .contains("appointmentTransStatus",searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("appointmentTransDate",searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("appointmentTransTime",searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("appointmentTransQueue",searchText, Case.INSENSITIVE)
+                        .endGroup()
+                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+                appointmentListAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -734,7 +768,7 @@ public class AppointmentActivity
                 newCalendar.get(Calendar.MONTH),
                 newCalendar.get(Calendar.DAY_OF_MONTH)
         );
-        int daysallowable = 0;//get from database
+        int daysallowable = 1;//get from database
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, daysallowable);
       //  Cal dateBefore30Days = cal.getTime();

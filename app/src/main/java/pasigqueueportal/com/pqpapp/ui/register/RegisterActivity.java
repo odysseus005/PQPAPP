@@ -134,7 +134,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     @Override
     public void onRegistrationSuccess() {
         new AlertDialog.Builder(this)
-                .setTitle("Register Successful")
+                .setTitle("Registration Successful")
                 .setMessage("Go Back to Login Page Thank you!")
                 .setCancelable(false)
                 .setPositiveButton("Close", new DialogInterface.OnClickListener() {

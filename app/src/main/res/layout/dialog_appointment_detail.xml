@@ -58,7 +58,7 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:visibility="gone"
-                            android:text="Reserving Appointment Succesful"
+                            android:text="Appointment Reservation Successful"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
 

@@ -28,7 +28,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
 
     public void login(final String email, final String password) {
         if (email.isEmpty() || email.equals("")) {
-            getView().showAlert("Please enter email");
+            getView().showAlert("Please enter Username");
         } else if (password.isEmpty() || password.equals("")) {
             getView().showAlert("Please enter Password");
         } else {

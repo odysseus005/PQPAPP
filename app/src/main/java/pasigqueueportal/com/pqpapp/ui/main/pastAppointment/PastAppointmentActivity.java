@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
@@ -183,36 +184,13 @@ public class PastAppointmentActivity
             @Override
             public boolean onQueryTextChange(String newText) {
                 searchText = newText;
-                //prepareList();
+                prepareList();
                 return true;
             }
         });
 
     }
-//    private void prepareList() {
-//        if (appointmentlmResults.isLoaded() && appointmentlmResults.isValid()) {
-//            if (searchText.isEmpty()) {
-//
-//
-//                appointmentlmResults = realm.where(Appointment.class).findAllAsync();
-//                appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
-//                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
-//                appointmentListAdapter.notifyDataSetChanged();
-//
-//            } else {
-//
-//                appointmentlmResults = realm.where(Appointment.class).findAllAsync();
-//                appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
-//                        .contains("emailAddress",searchText, Case.INSENSITIVE)
-//                        .or()
-//                        .contains("firstName",searchText, Case.INSENSITIVE)
-//                        .or()
-//                        .contains("lastName",searchText, Case.INSENSITIVE)
-//                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
-//                appointmentListAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
+
 
 
     @Override
@@ -302,6 +280,54 @@ public class PastAppointmentActivity
 
     }
 
+    private void prepareList() {
+        if (appointmentlmResults.isLoaded() && appointmentlmResults.isValid()) {
+            Date c = Calendar.getInstance().getTime();
+            if (searchText.isEmpty()) {
+
+
+                appointmentlmResults = realm.where(Appointment.class).findAllAsync();
+                appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+                        .lessThan("appointmentTimestamp",c )
+                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+                appointmentListAdapter.notifyDataSetChanged();
+
+            } else {
+
+
+             String status =  presenter.getStatus(searchText);
+             String trans = presenter.searchTransactionType(searchText);
+                String tax="";
+             try {
+                  tax = presenter.searchTaxType(searchText).getTaxTypeDesc();
+             }catch (Exception e)
+             {
+
+             }
+
+
+
+                appointmentlmResults = realm.where(Appointment.class).findAllAsync();
+                appointmentListAdapter.setAppointmentResult(realm.copyToRealmOrUpdate(appointmentlmResults.where()
+                        .lessThan("appointmentTimestamp",c )
+                        .beginGroup()
+                        .equalTo("appointmentTransStatus",status, Case.INSENSITIVE)
+//                        .or()
+//                        .equalTo("appointmentTransType",trans, Case.INSENSITIVE)
+//                        .or()
+//                        .contains("appointmentTaxType",tax, Case.INSENSITIVE)
+                        .or()
+                        .equalTo("appointmentTransDate",searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("appointmentTransTime",searchText, Case.INSENSITIVE)
+                        .or()
+                        .equalTo("appointmentTransQueue",searchText, Case.INSENSITIVE)
+                        .endGroup()
+                        .findAll()));//Sorted("eventDateFrom", Sort.ASCENDING)));
+                appointmentListAdapter.notifyDataSetChanged();
+            }
+        }
+    }
     @Override
     public void setAppointmentList(){
 
