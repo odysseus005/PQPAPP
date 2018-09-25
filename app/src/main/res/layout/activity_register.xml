@@ -97,6 +97,20 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColorHint="@android:color/darker_gray" />
             <!-- first name -->
+
+            <!-- email address -->
+            <EditText
+                android:id="@+id/et_email2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_selector"
+                android:hint="Email Address"
+                android:inputType="textEmailAddress"
+                android:maxLength="150"
+                android:padding="12dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textColorHint="@android:color/darker_gray" />
             <EditText
                 android:id="@+id/et_first_name"
                 android:layout_width="match_parent"

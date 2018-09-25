@@ -49,12 +49,25 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:hint="A code has been sent to your contact number. "
+                        android:hint="A code has been sent to your contact number."
                         android:textColor="@color/gray"
 
                         />
                         <!--android:hint="A code has been sent to your email account"-->
 
+                    <TextView
+                        android:id="@+id/tv3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text=" Note: Please make sure to check your email and click the confirmation link."
+                        android:textColor="@color/gray"
+
+                        />
 
                     <!-- email address -->
                     <EditText

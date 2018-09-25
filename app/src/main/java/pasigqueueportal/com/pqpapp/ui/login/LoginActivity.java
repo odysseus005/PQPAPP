@@ -197,7 +197,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
        // showAlert("Code: "+user.getCode());
 
-        if(!(user.getFirstlogin().equalsIgnoreCase("1")))
+        if((user.getFirstlogin().equalsIgnoreCase("1")))
         {
 
             dialog = new Dialog(LoginActivity.this);
@@ -212,12 +212,12 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
                 @Override
                 public void onClick(View v) {
                     if(dialogBinding.etCode.getText().toString().equalsIgnoreCase(user.getCode()))
-                        presenter.firstLogin(token.getToken(),user);
+                        presenter.firstLogin(token.getToken(),user,dialogBinding.etCode.getText().toString());
                     else
                         showAlert("Invalid Code");
 
 
-                    showAlert("Code: "+user.getCode());
+                   // showAlert("Code: "+user.getCode());
                 }
             });
 

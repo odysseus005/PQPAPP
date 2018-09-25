@@ -103,7 +103,8 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
                 binding.etLastName.getText().toString(),
                 binding.etBirthday.getText().toString(),
                 binding.etMobileNumber.getText().toString(),
-                binding.etAddress.getText().toString()
+                binding.etAddress.getText().toString(),
+                binding.etEmail2.getText().toString()
                );
 
 
@@ -135,7 +136,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     public void onRegistrationSuccess() {
         new AlertDialog.Builder(this)
                 .setTitle("Registration Successful")
-                .setMessage("Go Back to Login Page Thank you!")
+                .setMessage("Please check your email and click the confirmation link Thank you!")
                 .setCancelable(false)
                 .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     @Override
