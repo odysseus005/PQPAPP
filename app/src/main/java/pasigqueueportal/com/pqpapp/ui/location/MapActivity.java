@@ -614,7 +614,7 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
             eta = durationInfo.getText();
 
             binding.dealerDistance.setText("Total Distance: "+distance);
-            binding.dealerEta.setText("Esimated Travel Time: "+eta);
+            binding.dealerEta.setText("Estimated Travel Time: "+eta);
             try {
             if(timeChecker) {
 

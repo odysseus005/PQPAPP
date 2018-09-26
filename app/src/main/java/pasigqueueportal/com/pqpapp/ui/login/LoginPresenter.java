@@ -201,21 +201,23 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
     }
 
 
-    public void firstLogin(String token, final User userSave) {
+    public void firstLogin(String token, final User userSave,String code) {
+
+
         getView().startLoading();
-        App.getInstance().getApiInterface().updateUserCode(Constants.APPJSON,Constants.BEARER+token).enqueue(new Callback<ResultResponse>() {
+        App.getInstance().getApiInterface().updateUserCode(Constants.APPJSON,Constants.BEARER+token,code).enqueue(new Callback<ResultResponse>() {
             @Override
             public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
                 getView().stopLoading();
                 if (response.isSuccessful()) {
-                    if (response.isSuccessful()) {
+                    if (response.body().isSuccess()) {
 
                         final Realm realm = Realm.getDefaultInstance();
                         realm.executeTransactionAsync(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
                                 user = userSave;
-                                user.setFirstlogin("1");
+                                user.setFirstlogin("2");
                                 realm.copyToRealmOrUpdate(user);
 
 
@@ -234,11 +236,11 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                             public void onError(Throwable error) {
                                 realm.close();
                                 Log.e(TAG, "onError: Unable to save USER", error);
-                                getView().showAlert("Error Saving API Response");
+                                getView().showAlert("Error Connecting to Server");
                             }
                         });
                     } else {
-                        getView().showAlert("Error Connecting to Server");
+                        getView().showAlert(response.body().getMessage());
                     }
                 } else {
                     getView().showAlert(response.message() != null ? response.message()

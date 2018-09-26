@@ -20,7 +20,7 @@ public class Endpoints {
     public static final String UPLOAD_PICTURE = "user/upload";
     public static final String UPDATEUSER = "profile";
     public static final String UPDATEPASS = "changepassword";
-    public static final String FORGOTPASS = "forgotPass";
+    public static final String FORGOTPASS = "user/passwordreset";
     public static final String FIRSTLOGIN = "firstLogin";
 
 

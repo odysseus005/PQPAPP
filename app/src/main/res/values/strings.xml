@@ -2,7 +2,7 @@
     <string name="app_name">Pasig Queue Portal</string>
 
     <!--changepass -->
-    <string name="change_password_dialog">Enter your username below and we\'ll send your password!</string>
+    <string name="change_password_dialog">Enter your email below and we\'ll send your password!</string>
     <string name="password_recovery">Password Recovery</string>
 
     <!-- nav drawer -->

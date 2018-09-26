@@ -38,13 +38,22 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST(Endpoints.REGISTER)
     Call<ResultResponse>register( @Header(Constants.ACCEPT) String json,
-                                  @Field(Constants.USERNAME) String email,
+                                  @Field(Constants.USERNAME) String user,
                                   @Field(Constants.PASSWORD) String password,
                                   @Field(Constants.FIRST_NAME) String firstName,
                                   @Field(Constants.LAST_NAME) String lastName,
                                   @Field(Constants.BIRTHDAY) String birthday,
                                   @Field(Constants.CONTACT) String contact,
-                                  @Field(Constants.ADDRESS) String address
+                                  @Field(Constants.ADDRESS) String address,
+                                          @Field(Constants.EMAIL) String email
+
+    );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.FORGOTPASS)
+    Call<ResultResponse>forgot( @Header(Constants.ACCEPT) String json,
+                                  @Field(Constants.EMAIL) String email
 
     );
 
@@ -61,10 +70,12 @@ public interface ApiInterface {
                                      @Field(Constants.TOKEN_REFRESH) String refresh
 
                                      );
-
+    @FormUrlEncoded
     @PATCH(Endpoints.VERIFY_CODE)
     Call<ResultResponse> updateUserCode(@Header(Constants.ACCEPT) String json,
-                                        @Header(Constants.AUTHORIZATION) String authorization);
+                                        @Header(Constants.AUTHORIZATION) String authorization,
+                                        @Field(Constants.CODE) String refresh
+    );
 
 
 

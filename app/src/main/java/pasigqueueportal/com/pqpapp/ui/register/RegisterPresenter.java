@@ -29,7 +29,8 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
                          String lastName,
                          String birthday,
                          String contact,
-                         String address
+                         String address,
+                             String email
                          ) {
 
         if (username.equals("") || password.equals("") || confirmPassword.equals("") || firstName.equals("") || lastName.equals("") || birthday.equals("") ||
@@ -37,6 +38,9 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
             getView().showAlert("Fill-up all fields");
         }else if (!Patterns.PHONE.matcher(contact).matches()) { // check if mobile number is valid
             getView().showAlert("Invalid mobile number.");
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) { //check if email is valid
+            getView().showAlert("Invalid email address.");
         }
          else if (password.length() < 8) {
             getView().showAlert("Password must be atleast 8 characters");
@@ -46,7 +50,7 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
             getView().showAlert("Password does not match");
         } else {
             getView().startLoading();
-            App.getInstance().getApiInterface().register(Constants.APPJSON ,username, password, firstName,  lastName, birthday, contact, address)
+            App.getInstance().getApiInterface().register(Constants.APPJSON ,username, password, firstName,  lastName, birthday, contact, address,email)
                     .enqueue(new Callback<ResultResponse>() {
                         @Override
                         public void onResponse(Call<ResultResponse> call, Response<ResultResponse> response) {

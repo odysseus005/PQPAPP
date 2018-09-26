@@ -24,6 +24,7 @@ public class Constants {
     public static final String NOT_EXIST = "doesNotExist";
     public static final String WRONG_PASSWORD = "wrong";
     public static final String EMAIL_EXIST = "existing";
+    public static final String CODE ="code";
 
 
     //Profile
@@ -34,6 +35,7 @@ public class Constants {
     public static final String CONTACT = "contact_no";
     public static final String ADDRESS = "address";
     public static final String IMAGE = "image";
+    public static final String EMAIL = "email";
 
 
     //Appointment
