@@ -134,7 +134,7 @@
                         android:layout_width="0dp"
                         android:layout_weight=".88"
                         android:layout_height="wrap_content"
-                        android:text="A text message will be send to your cellphone number 15 minutes before estimated call time."
+                        android:text="A text message will be sent to your cellphone number 15 minutes before estimated call time."
                         android:layout_marginTop="6dp"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
                         />
@@ -160,7 +160,7 @@
                         android:layout_width="0dp"
                         android:layout_weight=".88"
                         android:layout_height="wrap_content"
-                        android:text="Refer to the real-time queue transactions at the homepage to be updated."
+                        android:text="Refer to the real-time queue transactions at the “Now Serving” in the electronic queue number to be updated"
                         android:layout_marginTop="6dp"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
                         />

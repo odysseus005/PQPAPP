@@ -514,9 +514,18 @@ public class MapActivity extends MvpActivity<MapView, MapPresenter> implements M
             @Override
             public void onClick(View v) {
 
-                String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat,lng);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                startActivity(intent);
+                try {
+
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + lat + "," + lng);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                }catch (Exception e)
+                {
+                    String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat,lng);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    startActivity(intent);
+                }
 
             }
         });

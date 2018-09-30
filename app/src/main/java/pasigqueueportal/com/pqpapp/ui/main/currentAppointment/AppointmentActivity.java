@@ -157,7 +157,7 @@ public class AppointmentActivity
         }
 
         presenter.onStart(token.getTokenRefresh());
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Appointment");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My Appointment");
 
 
         appointmentListAdapter = new AppointmentAdapter(getActivity(), getMvpView(),realm);
@@ -445,6 +445,16 @@ public class AppointmentActivity
 
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if(dialogDetail!=null)
+        dialogDetail.dismiss();
+        reserveChecker=false;
+
+    }
+
+
+    @Override
     public  void onFinishTokenRef()
     {
         token = realm.where(Token.class).findFirst();
@@ -653,7 +663,7 @@ public class AppointmentActivity
             public void onClick(View v) {
 
                 new AlertDialog.Builder(getContext())
-                        .setTitle("Are you sure you want cancel your appointment?")
+                        .setTitle("Are you sure you want to cancel your appointment?")
                         .setPositiveButton( "Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 presenter.cancelAppointment(token.getToken(),String.valueOf(appointment.getAppointmentId()));
@@ -918,15 +928,19 @@ public class AppointmentActivity
 
                 if(assesTypeAdapter.getSelected().equals(""))
                 {
+
                     showError("Please Select Transacion");
                 }else if(selectedTaxtype.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
+                    presenter.loadTaxType(token.getToken());
                     showError("Please Select Tax Type Again");
+
                 }else if(selectedDate.equals(""))
                 {
                     showError("Please Select Date");
                 }else if(selectedBaranagay.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
+                    presenter.loadBarangay(token.getToken());
                     showError("Please Select Barangay Again");
                 }
                 else {

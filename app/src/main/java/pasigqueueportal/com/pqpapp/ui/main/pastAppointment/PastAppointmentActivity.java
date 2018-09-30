@@ -132,7 +132,7 @@ public class PastAppointmentActivity
             //  finish();
         }
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Appointment");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("My Appointment");
 
         presenter.onStart();
 

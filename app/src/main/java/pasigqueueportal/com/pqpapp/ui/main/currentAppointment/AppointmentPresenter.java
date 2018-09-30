@@ -433,7 +433,7 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
                         @Override
                         public void onSuccess() {
                             realm.close();
-                            getView().showReturnCancel("Cancelling Appointment Successful");
+                            getView().showReturnCancel("You’re appointment has been cancelled.");
 
 
                         }
