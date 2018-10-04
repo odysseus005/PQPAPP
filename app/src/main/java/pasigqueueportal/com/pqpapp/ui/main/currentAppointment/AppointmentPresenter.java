@@ -518,11 +518,11 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
 
     public void currentServing( String token,String id)
     {
-        getView().startLoading();
+       // getView().startLoading();
         App.getInstance().getApiInterface().currentServing( Constants.APPJSON,Constants.BEARER+token,id).enqueue(new Callback<CurrentServingResponse>() {
             @Override
             public void onResponse(Call<CurrentServingResponse> call, final Response<CurrentServingResponse> response) {
-                getView().stopLoading();
+             //   getView().stopLoading();
                 if (response.isSuccessful()) {
 
                    final CurrentServing cs = new CurrentServing();
@@ -566,8 +566,8 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
 
             @Override
             public void onFailure(Call<CurrentServingResponse> call, Throwable t) {
-                getView().stopLoading();
-                getView().stopLoading();
+             //   getView().stopLoading();
+             //   getView().stopLoading();
                 getView().showError("Error Connecting to Server");
             }
         });

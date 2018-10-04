@@ -99,6 +99,7 @@ public class AppointmentActivity
     private Dialog dialog,dialogDetail,dialogDetailReminder,dialogfeedback;
     private Token token;
     private boolean reserveChecker=false;
+    private Pusher pusher;
     private  String selectedBaranagay="",selectedTaxtype="",selectedDate="";
     public AppointmentActivity(){
 
@@ -202,6 +203,9 @@ public class AppointmentActivity
 
         binding.txtDateToday.setText(FunctionUtils.convertDateToString("MMMM dd, yyyy", Calendar.getInstance()));
 
+        PusherOptions options = new PusherOptions();
+        options.setCluster("ap1");
+        pusher = new Pusher("a193f173e233c07d855d", options);
 
 
 
@@ -565,7 +569,7 @@ public class AppointmentActivity
 
         }
 
-        String channelSwitch;
+        final String channelSwitch;
 
         if(appointment.getAppointmentTransType().equals("2")) {
             channelSwitch = "window." +   (appointment.getPaymentWindow().getPaymentDesc()).replaceAll("[^0-9]", "");
@@ -577,13 +581,10 @@ public class AppointmentActivity
         }
 
 
-        PusherOptions options = new PusherOptions();
-        options.setCluster("ap1");
-        Pusher pusher = new Pusher("a193f173e233c07d855d", options);
 
 
 
-        Channel channel = pusher.subscribe(channelSwitch);
+        final Channel channel = pusher.subscribe(channelSwitch);
 
         Log.d(">>>>channelswitch>>",channelSwitch);
 
@@ -703,6 +704,9 @@ public class AppointmentActivity
             public void onClick(View v) {
                 dialogDetail.dismiss();
                 reserveChecker=false;
+                pusher.unsubscribe(channelSwitch);
+                pusher.disconnect();
+
             }
         });
 
@@ -711,8 +715,9 @@ public class AppointmentActivity
             public void onClick(View v) {
               if(detailBinding.appointmentDetailsHide.getVisibility()==View.VISIBLE)
                   detailBinding.appointmentDetailsHide.setVisibility(View.GONE);
-              else
+              else {
                   detailBinding.appointmentDetailsHide.setVisibility(View.VISIBLE);
+              }
             }
         });
 
@@ -721,8 +726,15 @@ public class AppointmentActivity
             public void onClick(View v) {
                 if(detailBinding.currentServing.getVisibility()==View.VISIBLE)
                     detailBinding.currentServing.setVisibility(View.GONE);
-                else
+                else {
+                    if(appointment.getAppointmentTransType().equals("2")) {
+                        presenter.currentServing(token.getToken(),appointment.getPaymentWindow().getPaymentAssignId());
+                    }
+                    else {
+                        presenter.currentServing(token.getToken(),appointment.getAssessmentWindow().getPaymentAssignId());
+                    }
                     detailBinding.currentServing.setVisibility(View.VISIBLE);
+                }
             }
         });
 

@@ -132,6 +132,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
+                            android:visibility="gone"
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title" />

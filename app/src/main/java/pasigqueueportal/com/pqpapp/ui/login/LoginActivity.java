@@ -197,7 +197,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
        // showAlert("Code: "+user.getCode());
 
-        if((user.getFirstlogin().equalsIgnoreCase("1")))
+        if((user.getFirstlogin().equalsIgnoreCase("0"))||(user.getFirstlogin().equalsIgnoreCase("1")))
         {
 
             dialog = new Dialog(LoginActivity.this);
