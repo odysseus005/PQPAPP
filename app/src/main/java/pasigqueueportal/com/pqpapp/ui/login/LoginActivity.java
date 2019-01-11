@@ -130,8 +130,8 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     public void onLoginButtonClicked() {
 
 
-       /* startActivity(new Intent(this, GuestActivity.class));
-        finish();*/
+//        startActivity(new Intent(this, MainActivity.class));
+//        finish();
 
         presenter.login(
                 binding.username.getText().toString(),

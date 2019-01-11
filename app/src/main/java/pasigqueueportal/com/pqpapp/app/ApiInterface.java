@@ -12,6 +12,7 @@ import pasigqueueportal.com.pqpapp.model.response.CurrentServingResponse;
 import pasigqueueportal.com.pqpapp.model.response.FeedbackResponse;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
+import pasigqueueportal.com.pqpapp.model.response.SlotResponse;
 import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -24,6 +25,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 public interface ApiInterface {
@@ -149,6 +151,18 @@ public interface ApiInterface {
                                   @Field(Constants.TAX_TYPE_ID) String tax_type_id,
                                   @Field(Constants.TRANSACTION_DATE) String trans_date,
                                   @Field(Constants.BARANGAY_ID) String baranagay_id
+
+    );
+
+
+    @GET(Endpoints.APPOINTMENT_SLOT)
+    Call<SlotResponse>assessAppointmentSlot(@Header(Constants.ACCEPT) String json,
+                                            @Header(Constants.AUTHORIZATION) String authorization,
+                                            @Query(Constants.TRANSACTION_MONTH) int trans_month,
+                                            @Query(Constants.TRANSACTION_YEAR) int trans_year,
+                                            @Query(Constants.TRANSACTION_TYPE) String trans_type,
+                                            @Query(Constants.TAX_TYPE_ID) String tax_type_id,
+                                            @Query(Constants.BARANGAY_ID) String baranagay_id
 
     );
 

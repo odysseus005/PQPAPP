@@ -25,8 +25,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.RatingBar;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +35,9 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.iid.InstanceIdResult;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
 import com.pusher.client.channel.Channel;
@@ -47,9 +48,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,9 +65,11 @@ import pasigqueueportal.com.pqpapp.databinding.DialogAddAppointmentBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAddFeedbackBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentDetailBinding;
 import pasigqueueportal.com.pqpapp.databinding.DialogAppointmentRemindersBinding;
+import pasigqueueportal.com.pqpapp.databinding.DialogDateslotBinding;
 import pasigqueueportal.com.pqpapp.model.data.Appointment;
 import pasigqueueportal.com.pqpapp.model.data.Barangay;
 import pasigqueueportal.com.pqpapp.model.data.CurrentServing;
+import pasigqueueportal.com.pqpapp.model.data.Slot;
 import pasigqueueportal.com.pqpapp.model.data.TaxType;
 import pasigqueueportal.com.pqpapp.model.data.Token;
 import pasigqueueportal.com.pqpapp.model.data.User;
@@ -72,11 +77,12 @@ import pasigqueueportal.com.pqpapp.ui.location.MapActivity;
 import pasigqueueportal.com.pqpapp.ui.login.LoginActivity;
 import pasigqueueportal.com.pqpapp.ui.main.MainActivity;
 import pasigqueueportal.com.pqpapp.util.FunctionUtils;
+import pasigqueueportal.com.pqpapp.util.YearMonthPickerDialog;
 
 
 public class AppointmentActivity
         extends MvpViewStateFragment<AppointmentView, AppointmentPresenter>
-        implements SwipeRefreshLayout.OnRefreshListener, AppointmentView,DatePickerDialog.OnDateSetListener {
+        implements SwipeRefreshLayout.OnRefreshListener, AppointmentView,DatePickerDialog.OnDateSetListener, OnDateSelectedListener {
 
 
     private ProgressDialog progressDialog;
@@ -86,6 +92,7 @@ public class AppointmentActivity
     private User user;
     private RealmResults<Appointment> appointmentlmResults;
     private RealmResults<Barangay> barangayRealmResults;
+    private RealmResults<Slot> slotRealmResults;
     private RealmResults<TaxType> taxTypeRealmResults;
     private String searchText;
     public String id,appointid,fcmID="";
@@ -95,12 +102,14 @@ public class AppointmentActivity
     private DialogAddAppointmentBinding dialogBinding;
     private DialogAppointmentDetailBinding detailBinding;
     private DialogAppointmentRemindersBinding reminderBinding;
-    private DialogAddFeedbackBinding feedbackBinding;
-    private Dialog dialog,dialogDetail,dialogDetailReminder,dialogfeedback;
+    private DialogDateslotBinding dateslotBinding;
+    private Dialog dialog,dialogDetail,dialogDetailReminder,dialogfeedback,dialogDateSlot;
     private Token token;
     private boolean reserveChecker=false;
     private Pusher pusher;
     private  String selectedBaranagay="",selectedTaxtype="",selectedDate="";
+    private int selectYear=0,selectMonth=0,totalslot=0;
+
     public AppointmentActivity(){
 
     }
@@ -113,6 +122,7 @@ public class AppointmentActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
 
     }
 
@@ -206,6 +216,7 @@ public class AppointmentActivity
         PusherOptions options = new PusherOptions();
         options.setCluster("ap1");
         pusher = new Pusher("a193f173e233c07d855d", options);
+
 
 
 
@@ -517,8 +528,10 @@ public class AppointmentActivity
 //        selectedBaranagay="";selectedTaxtype="";selectedDate="";
         assesTypeAdapter.reset();
         dialog.dismiss();
+        dialogDateSlot.dismiss();
         hideAssessTypeAdapter();
         reserveChecker=true;
+       Log.d(">>>",appointment.toString());
         showAppointmentDetails(appointment);
 
     }
@@ -539,6 +552,7 @@ public class AppointmentActivity
 
     @Override
     public void showAppointmentDetails(final Appointment appointment) {
+
 
 
         token = realm.where(Token.class).findFirst();
@@ -648,10 +662,19 @@ public class AppointmentActivity
             detailBinding.reminders.setVisibility(View.GONE);
         }
 
-        detailBinding.detailTaxType.setText("Tax Type: "+(presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
-        detailBinding.detailTransType.setText("Transaction Type: "+presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
-        detailBinding.detailBarangay.setText("Barangay: "+(presenter.getBarangay(appointment.getAppointmentBaranagay())).getBarangayName());
 
+
+        try {
+
+
+            detailBinding.detailTaxType.setText("Tax Type: " + (presenter.getTaxType(appointment.getAppointmentTaxType())).getTaxTypeDesc());
+            detailBinding.detailTransType.setText("Transaction Type: " + presenter.getTransactionType(Integer.parseInt(appointment.getAppointmentTransType())));
+            detailBinding.detailBarangay.setText("Barangay: " + (presenter.getBarangay(appointment.getAppointmentBaranagay())).getBarangayName());
+        }
+        catch (Exception e)
+        {
+            Log.e("Error",e+"");
+        }
 
 
         detailBinding.appointmentDetailsStatus.setTextColor(appointmentListAdapter.getStatusColor(appointment.getAppointmentTransStatus()));
@@ -760,7 +783,130 @@ public class AppointmentActivity
     }
 
 
+    @Override
+    public void setAppointmentDateNew(final boolean trans, int month, int year, int totalSlots)
+    {
+        dialogDateSlot = new Dialog(getContext(),R.style.RaffleDialogTheme);
 
+        dialogDateSlot.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        dateslotBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_dateslot,
+                null,
+                false);
+
+
+        dateslotBinding.calendarView.setOnDateChangedListener(this);
+
+        dateslotBinding.calendarView.addDecorator(new FunctionUtils.WeekendDisableDecorator());
+        List<CalendarDay> calendarDaysGreen = new ArrayList<>();
+        List<CalendarDay> calendarDaysOrange = new ArrayList<>();
+        List<CalendarDay> calendarDaysRed = new ArrayList<>();
+        slotRealmResults = realm.where(Slot.class).findAll();
+
+
+        totalslot = totalSlots;
+
+        if(!slotRealmResults.isEmpty()) {
+            for (Slot value : slotRealmResults) {
+                if(Integer.parseInt(value.getSlotCount()) < totalSlots/2 )
+                calendarDaysGreen.add(presenter.getCalendar(value.getSlotDate()));
+                else  if(Integer.parseInt(value.getSlotCount()) < totalSlots/1.25 )
+                    calendarDaysOrange.add(presenter.getCalendar(value.getSlotDate()));
+                else
+                    calendarDaysRed.add(presenter.getCalendar(value.getSlotDate()));
+            }
+        }
+
+        dateslotBinding.calendarView.addDecorator(new FunctionUtils.EventDecoratorAll(Color.GREEN));
+        dateslotBinding.calendarView.addDecorator(new FunctionUtils.EventDecorator(Color.RED, calendarDaysRed));
+        dateslotBinding.calendarView.addDecorator(new FunctionUtils.EventDecorator(Color.GREEN, calendarDaysGreen));
+        dateslotBinding.calendarView.addDecorator(new FunctionUtils.EventDecorator(Color.rgb(255,165,0), calendarDaysOrange));
+
+
+
+        Date date = new GregorianCalendar(year, month-1, 1).getTime();
+        Calendar dateCounter = new GregorianCalendar(year, month-1, 1);
+        Date date2 = new GregorianCalendar(year, month-1, dateCounter.getActualMaximum(Calendar.DAY_OF_MONTH)).getTime();
+
+        if (new Date().after(date)) {
+
+            Log.d(">>>","here");
+            dateslotBinding.calendarView.state().edit()
+                    .setMinimumDate(new Date())
+                    .setMaximumDate(date2)
+                    .commit();
+
+        }else
+        {
+
+
+            dateslotBinding.calendarView.state().edit()
+                    .setMinimumDate(date)
+                    .setMaximumDate(date2)
+                    .commit();
+        }
+
+
+
+
+        dateslotBinding.reserve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(trans)
+                presenter.assessmentAppointment(assesTypeAdapter.getSelected(), selectedTaxtype, selectedDate, selectedBaranagay, token.getToken());
+                else {
+                    Appointment appointment = unpaidAdapter.getValue();
+                    presenter.paymentAppointment(assesTypeAdapter.getSelected(), appointment.getAppointmentTaxType(), selectedDate, appointment.getAppointmentBaranagay(), token.getToken(), appointment.getAppointmentId());
+                }
+            }
+        });
+
+
+
+        dateslotBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDateSlot.dismiss();
+            }
+        });
+
+        dialogDateSlot.setContentView(dateslotBinding.getRoot());
+        dialogDateSlot.setCancelable(true);
+        dialogDateSlot.show();
+
+    }
+
+    @Override
+    public void onDateSelected(
+            @NonNull MaterialCalendarView widget,
+            @NonNull CalendarDay date,
+            boolean selected) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        slotRealmResults = realm.where(Slot.class).findAll();
+        String slottaken="0";
+        if(!slotRealmResults.isEmpty()) {
+            for (Slot value : slotRealmResults) {
+
+                if(date.equals(presenter.getCalendar(value.getSlotDate())))
+                {
+
+                    slottaken = value.getSlotCount();
+                  break;
+                }
+
+            }
+        }
+        dateslotBinding.dateSlot.setText(selected ? dateFormatter.format(date.getDate()) : "No Selection");
+
+
+        selectedDate = dateFormatter.format(date.getDate());
+
+        dateslotBinding.dateSlot.setText("Available Slots:  "+slottaken+"/"+totalslot);
+    }
 
 
 
@@ -768,38 +914,59 @@ public class AppointmentActivity
     public void setAppointmentDate() {
 
 
-        Calendar sunday,saturday;
-        List<Calendar> weekends = new ArrayList<>();
-        int weeks = 50;
+//        Calendar sunday,saturday;
+//        List<Calendar> weekends = new ArrayList<>();
+//        int weeks = 50;
+//
+//        for (int i = 0; i < (weeks * 7) ; i = i + 7) {
+//            sunday = Calendar.getInstance();
+//            sunday.add(Calendar.DAY_OF_YEAR, (Calendar.SUNDAY - sunday.get(Calendar.DAY_OF_WEEK) + 7 + i));
+//             saturday = Calendar.getInstance();
+//             saturday.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - saturday.get(Calendar.DAY_OF_WEEK) + i));
+//             weekends.add(saturday);
+//            weekends.add(sunday);
+//        }
+//        Calendar[] disabledDays = weekends.toArray(new Calendar[weekends.size()]);
+//
+//
+//        Calendar newCalendar = Calendar.getInstance();
+//        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+//                AppointmentActivity.this,
+//                newCalendar.get(Calendar.YEAR),
+//                newCalendar.get(Calendar.MONTH),
+//                newCalendar.get(Calendar.DAY_OF_MONTH)
+//        );
+//        int daysallowable = 1;//get from database
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DATE, daysallowable);
+//      //  Cal dateBefore30Days = cal.getTime();
+//        datePickerDialog.setMinDate(cal);
+//        datePickerDialog.setDisabledDays(disabledDays);
+//        datePickerDialog.show(getActivity().getFragmentManager(),"");
 
-        for (int i = 0; i < (weeks * 7) ; i = i + 7) {
-            sunday = Calendar.getInstance();
-            sunday.add(Calendar.DAY_OF_YEAR, (Calendar.SUNDAY - sunday.get(Calendar.DAY_OF_WEEK) + 7 + i));
-             saturday = Calendar.getInstance();
-             saturday.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - saturday.get(Calendar.DAY_OF_WEEK) + i));
-             weekends.add(saturday);
-            weekends.add(sunday);
-        }
-        Calendar[] disabledDays = weekends.toArray(new Calendar[weekends.size()]);
 
 
-        Calendar newCalendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-                AppointmentActivity.this,
-                newCalendar.get(Calendar.YEAR),
-                newCalendar.get(Calendar.MONTH),
-                newCalendar.get(Calendar.DAY_OF_MONTH)
-        );
-        int daysallowable = 1;//get from database
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, daysallowable);
-      //  Cal dateBefore30Days = cal.getTime();
-        datePickerDialog.setMinDate(cal);
-        datePickerDialog.setDisabledDays(disabledDays);
-        datePickerDialog.show(getActivity().getFragmentManager(),"");
+        YearMonthPickerDialog yearMonthPickerDialog = new YearMonthPickerDialog(getContext(), new YearMonthPickerDialog.OnDateSetListener() {
+            @Override
+            public void onYearMonthSet(int year, int month) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy");
+
+                    selectYear = year;
+                    selectMonth = month+1;
 
 
 
+
+                    dialogBinding.etDate.setText(dateFormat.format(calendar.getTime()));
+
+            }
+        });
+
+        yearMonthPickerDialog.show();
     }
 
     @Override
@@ -947,9 +1114,9 @@ public class AppointmentActivity
                     presenter.loadTaxType(token.getToken());
                     showError("Please Select Tax Type Again");
 
-                }else if(selectedDate.equals(""))
+                }else if(selectMonth == 0 || selectYear == 0)
                 {
-                    showError("Please Select Date");
+                    showError("Please Select Month");
                 }else if(selectedBaranagay.equals("")&&assesTypeAdapter.getSelected().equals("1"))
                 {
                     presenter.loadBarangay(token.getToken());
@@ -958,13 +1125,18 @@ public class AppointmentActivity
                 else {
 
                     if(assesTypeAdapter.getSelected().equals("1"))
-                    presenter.assessmentAppointment(assesTypeAdapter.getSelected(), selectedTaxtype, selectedDate, selectedBaranagay, token.getToken());
-                   else if(assesTypeAdapter.getSelected().equals("2")) {
+                   // presenter.assessmentAppointment(assesTypeAdapter.getSelected(), selectedTaxtype, selectedDate, selectedBaranagay, token.getToken());
+                        presenter.slotAppointment(assesTypeAdapter.getSelected(), selectedTaxtype,selectMonth,selectYear, selectedBaranagay, token.getToken(),true);
+
+                    else if(assesTypeAdapter.getSelected().equals("2")) {
                         if(unpaidAdapter.getSelected().equals("true")) {
 
                             Appointment appointment = unpaidAdapter.getValue();
-                            presenter.paymentAppointment(assesTypeAdapter.getSelected(), appointment.getAppointmentTaxType(), selectedDate, appointment.getAppointmentBaranagay(), token.getToken(),appointment.getAppointmentId());
+                          //  presenter.paymentAppointment(assesTypeAdapter.getSelected(), appointment.getAppointmentTaxType(), selectedDate, appointment.getAppointmentBaranagay(), token.getToken(),appointment.getAppointmentId());
+                            presenter.slotAppointment(assesTypeAdapter.getSelected(), selectedTaxtype,selectMonth,selectYear, selectedBaranagay, token.getToken(),false);
+
                         }
+
                         else
                             showError("Please Select Unpaid Transaction");
                     }

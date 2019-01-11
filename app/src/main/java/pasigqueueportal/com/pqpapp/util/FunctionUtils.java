@@ -1,16 +1,22 @@
 package pasigqueueportal.com.pqpapp.util;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
+
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 
-/**
- * @author pocholomia
- * @since 13/09/2016
- */
+
 public class FunctionUtils {
 
     public static final String FULL_23_HR_DATE = "yyyy-MM-dd";
@@ -176,5 +182,71 @@ public class FunctionUtils {
     public static String removeLastChar(String str) {
         return str.substring(0, str.length() - 1);
     }
+
+    public static class WeekendDisableDecorator implements DayViewDecorator {
+
+        @Override
+        public boolean shouldDecorate(final CalendarDay day) {
+
+
+
+            if (day.getCalendar().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||day.getCalendar().get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ) {
+             return true;
+            }
+            else
+                return  false;
+
+//
+        }
+
+        @Override
+        public void decorate(final DayViewFacade view) {
+            view.setDaysDisabled(true);
+        }
+
+    }
+
+    public static class EventDecorator implements DayViewDecorator {
+
+        private int color;
+        private HashSet<CalendarDay> dates;
+
+        public EventDecorator(int color, Collection<CalendarDay> dates) {
+            this.color = color;
+            this.dates = new HashSet<>(dates);
+        }
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return dates.contains(day);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.addSpan(new DotSpan(20, color));
+        }
+    }
+
+
+    public static class EventDecoratorAll implements DayViewDecorator {
+
+        private int color;
+        public EventDecoratorAll(int color) {
+            this.color = color;
+
+        }
+
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return true;
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.addSpan(new DotSpan(20, color));
+        }
+    }
+
 
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -33,6 +34,8 @@ public class App extends Application {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
+
+
     }
 
     public synchronized static App getInstance() {

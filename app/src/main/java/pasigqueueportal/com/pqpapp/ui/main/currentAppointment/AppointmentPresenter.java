@@ -3,8 +3,13 @@ package pasigqueueportal.com.pqpapp.ui.main.currentAppointment;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-import java.io.IOException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import io.realm.Realm;
 
@@ -20,6 +25,7 @@ import pasigqueueportal.com.pqpapp.model.response.BarangayResponse;
 import pasigqueueportal.com.pqpapp.model.response.CurrentServingResponse;
 import pasigqueueportal.com.pqpapp.model.response.LoginResponse;
 import pasigqueueportal.com.pqpapp.model.response.ResultResponse;
+import pasigqueueportal.com.pqpapp.model.response.SlotResponse;
 import pasigqueueportal.com.pqpapp.model.response.TaxTypeResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -352,6 +358,64 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
     }
 
 
+    public void slotAppointment(String trans_type, String tax_type, final int trans_month, final int trans_yer, String baranagay, String token, final boolean assesPay)
+    {
+        getView().startLoading();
+        App.getInstance().getApiInterface().assessAppointmentSlot( Constants.APPJSON,Constants.BEARER+token,trans_month,trans_yer,trans_type,tax_type,baranagay).enqueue(new Callback<SlotResponse>() {
+            @Override
+            public void onResponse(Call<SlotResponse> call, final Response<SlotResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+
+                        final Realm realm = Realm.getDefaultInstance();
+                        realm.executeTransactionAsync(new Realm.Transaction() {
+
+
+
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.delete(Barangay.class);
+                                realm.copyToRealmOrUpdate(response.body().getAppointments());
+                                Log.d(">>>>",response.body().getLimit());
+                                Log.d(">>>>",""+response.body().getAppointments());
+
+
+
+                            }
+                        }, new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                realm.close();
+
+                                getView().setAppointmentDateNew(assesPay,trans_month,trans_yer,Integer.parseInt(response.body().getLimit()));
+                            }
+                        }, new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                realm.close();
+                                getView().showError("Error Saving API Response");
+                            }
+                        });
+
+                } else {
+
+                    getView().showError(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SlotResponse> call, Throwable t) {
+                getView().stopLoading();
+                getView().stopLoading();
+                getView().showError("Error Connecting to Server");
+            }
+        });
+
+
+    }
+
+
+
     public void paymentAppointment(String trans_type,String tax_type,String trans_date,String baranagay, String token,String id)
     {
         getView().startLoading();
@@ -599,8 +663,28 @@ public class AppointmentPresenter extends MvpBasePresenter<AppointmentView> {
     }
 
 
+    CalendarDay getCalendar(String strdate)
+    {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = sdf. parse(strdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar cal = Calendar. getInstance();
+        cal. setTime(date);
+        final CalendarDay day = CalendarDay.from(cal);
+        return  day;
+
+    }
+
+
 
     public void onStop() {
         realm.close();
     }
+
+
 }

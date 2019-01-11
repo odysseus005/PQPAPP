@@ -42,6 +42,8 @@ public class Constants {
     public static final String TRANSACTION_TYPE = "transaction_type";
     public static final String TAX_TYPE_ID = "tax_type_id";
     public static final String TRANSACTION_DATE = "transaction_date";
+    public static final String TRANSACTION_MONTH = "month";
+    public static final String TRANSACTION_YEAR = "year";
     public static final String BARANGAY_ID = "barangay_id";
     public static final String QUEUE_ID = "queue_id";
 

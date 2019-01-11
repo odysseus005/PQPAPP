@@ -17,6 +17,7 @@ public interface AppointmentView extends MvpView {
     void setAppointment();
 
     void setAppointmentDate();
+    void setAppointmentDateNew(boolean trans,int month, int year,int totalSlots);
 
     void showAppointmentDetails(Appointment appoint);
 

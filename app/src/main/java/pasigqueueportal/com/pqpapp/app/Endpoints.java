@@ -35,6 +35,7 @@ public class Endpoints {
     public static final String GET_TAXTYPE = "taxtypes";
     public static final String GET_BARANGAY = "barangay";
     public static final String APPOINTMENT = "queue";
+    public static final String APPOINTMENT_SLOT = "queue/number";
     public static final String CURRENT_SERVING = "window/{id}/serving";
 
     //Feedback

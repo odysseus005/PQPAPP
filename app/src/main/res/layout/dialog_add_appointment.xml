@@ -271,7 +271,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
-                        android:text="Select Date"
+                        android:text="Select Month and Year"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="@color/gray" />
 
@@ -344,7 +344,7 @@
                         android:paddingEnd="20dp"
                         android:paddingRight="25dp"
                         android:paddingStart="20dp"
-                        android:text="Save"
+                        android:text="Next"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
